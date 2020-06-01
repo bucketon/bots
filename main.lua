@@ -1,77 +1,77 @@
 function love.load()
 	testMode = false
-	Bot = require("bot")
-	Bots = require("base_bots")
-	Gameboard = require("gameboard")
-	AI = require("AI")
-	blobReader = require("BlobReader")
-	blobWriter = require("BlobWriter")
+	Bot = require("scripts/bot")
+	Bots = require("scripts/base_bots")
+	Gameboard = require("scripts/gameboard")
+	AI = require("scripts/AI")
+	blobReader = require("lib/BlobReader")
+	blobWriter = require("lib/BlobWriter")
 	math.randomseed(os.time())
 	love.window.setTitle("Bots")
 	love.graphics.setColor(1, 1, 1, 1)
 	font = love.graphics.newFont(18, "mono")
 	love.graphics.setFont(font)
-	title = love.graphics.newImage("title.png")
-	rules = love.graphics.newImage("rules.png")
-	arrow = love.graphics.newImage("arrow.png")
-	spaceCursor = love.graphics.newImage("spacecursor.png")
-	cardCursor = love.graphics.newImage("cardcursor.png")
-	cardback = love.graphics.newImage("cardback.png")
-	shadow = love.graphics.newImage("dropshadow.png")
-	space = love.graphics.newImage("boardspace.png")
-	neutralBotCard = love.graphics.newImage("neutralbot.png")
-	empIndicator = love.graphics.newImage("emp.png")
-	empMiniIndicator = love.graphics.newImage("emp_mini.png")
-	boostMiniIndicator = love.graphics.newImage("boost_mini.png")
-	attackIndicator = love.graphics.newImage("attack_indicator.png")
+	title = love.graphics.newImage("assets/title.png")
+	rules = love.graphics.newImage("assets/rules.png")
+	arrow = love.graphics.newImage("assets/arrow.png")
+	spaceCursor = love.graphics.newImage("assets/spacecursor.png")
+	cardCursor = love.graphics.newImage("assets/cardcursor.png")
+	cardback = love.graphics.newImage("assets/cardback.png")
+	shadow = love.graphics.newImage("assets/dropshadow.png")
+	space = love.graphics.newImage("assets/boardspace.png")
+	neutralBotCard = love.graphics.newImage("assets/neutralbot.png")
+	empIndicator = love.graphics.newImage("assets/emp.png")
+	empMiniIndicator = love.graphics.newImage("assets/emp_mini.png")
+	boostMiniIndicator = love.graphics.newImage("assets/boost_mini.png")
+	attackIndicator = love.graphics.newImage("assets/attack_indicator.png")
 	miniNumbers = {
-		love.graphics.newImage("minione.png"),
-		love.graphics.newImage("minitwo.png"),
-		love.graphics.newImage("minithree.png"),
-		love.graphics.newImage("minifour.png"),
-		love.graphics.newImage("minifive.png"),
-		love.graphics.newImage("minisix.png"),
-		love.graphics.newImage("miniseven.png"),
-		love.graphics.newImage("minieight.png"),
-		love.graphics.newImage("mininine.png"),
-		love.graphics.newImage("miniten.png"),
-		love.graphics.newImage("minieleven.png"),
-		love.graphics.newImage("minitwelve.png"),
-		love.graphics.newImage("minithirteen.png")
+		love.graphics.newImage("assets/minione.png"),
+		love.graphics.newImage("assets/minitwo.png"),
+		love.graphics.newImage("assets/minithree.png"),
+		love.graphics.newImage("assets/minifour.png"),
+		love.graphics.newImage("assets/minifive.png"),
+		love.graphics.newImage("assets/minisix.png"),
+		love.graphics.newImage("assets/miniseven.png"),
+		love.graphics.newImage("assets/minieight.png"),
+		love.graphics.newImage("assets/mininine.png"),
+		love.graphics.newImage("assets/miniten.png"),
+		love.graphics.newImage("assets/minieleven.png"),
+		love.graphics.newImage("assets/minitwelve.png"),
+		love.graphics.newImage("assets/minithirteen.png")
 	}
 	strengthBonus = {
-		love.graphics.newImage("plusone.png"),
-		love.graphics.newImage("plustwo.png"),
-		love.graphics.newImage("plusthree.png"),
-		love.graphics.newImage("plusfour.png"),
-		love.graphics.newImage("plusfive.png"),
-		love.graphics.newImage("plussix.png"),
-		love.graphics.newImage("plusseven.png"),
-		love.graphics.newImage("pluseight.png"),
-		love.graphics.newImage("plusnine.png")
+		love.graphics.newImage("assets/plusone.png"),
+		love.graphics.newImage("assets/plustwo.png"),
+		love.graphics.newImage("assets/plusthree.png"),
+		love.graphics.newImage("assets/plusfour.png"),
+		love.graphics.newImage("assets/plusfive.png"),
+		love.graphics.newImage("assets/plussix.png"),
+		love.graphics.newImage("assets/plusseven.png"),
+		love.graphics.newImage("assets/pluseight.png"),
+		love.graphics.newImage("assets/plusnine.png")
 	}
-	minicard = love.graphics.newImage("minicard.png")
-	thermometer = love.graphics.newImage("thermometer.png")
+	minicard = love.graphics.newImage("assets/minicard.png")
+	thermometer = love.graphics.newImage("assets/thermometer.png")
 	instructions = {
-		love.graphics.newImage("instructionsA.png"),
-		love.graphics.newImage("instructionsB.png"),
-		love.graphics.newImage("instructionsC.png")
+		love.graphics.newImage("assets/instructionsA.png"),
+		love.graphics.newImage("assets/instructionsB.png"),
+		love.graphics.newImage("assets/instructionsC.png")
 	}
-	arrowInstructions = love.graphics.newImage("instructions_arrows.png")
-	player1wins = love.graphics.newImage("player1wins.png")
-	player2wins = love.graphics.newImage("player2wins.png")
-	nbwins = love.graphics.newImage("neutralbotwins.png")
+	arrowInstructions = love.graphics.newImage("assets/instructions_arrows.png")
+	player1wins = love.graphics.newImage("assets/player1wins.png")
+	player2wins = love.graphics.newImage("assets/player2wins.png")
+	nbwins = love.graphics.newImage("assets/neutralbotwins.png")
 	mercury = {
-		love.graphics.newImage("therm_1.png"),
-		love.graphics.newImage("therm_2.png"),
-		love.graphics.newImage("therm_3.png"),
-		love.graphics.newImage("therm_4.png"),
-		love.graphics.newImage("therm_5.png"),
-		love.graphics.newImage("therm_6.png"),
-		love.graphics.newImage("therm_7.png"),
-		love.graphics.newImage("therm_8.png"),
-		love.graphics.newImage("therm_9.png"),
-		love.graphics.newImage("therm_10.png")
+		love.graphics.newImage("assets/therm_1.png"),
+		love.graphics.newImage("assets/therm_2.png"),
+		love.graphics.newImage("assets/therm_3.png"),
+		love.graphics.newImage("assets/therm_4.png"),
+		love.graphics.newImage("assets/therm_5.png"),
+		love.graphics.newImage("assets/therm_6.png"),
+		love.graphics.newImage("assets/therm_7.png"),
+		love.graphics.newImage("assets/therm_8.png"),
+		love.graphics.newImage("assets/therm_9.png"),
+		love.graphics.newImage("assets/therm_10.png")
 	}
 	saveData = load()
 	relevantScoresCount = 100
@@ -105,12 +105,12 @@ function love.load()
 		player2HandPositions[i] = {boardOffset[1]+(i-1)*50, -50}
 	end
 	menu = {
-			{selected = love.graphics.newImage("StartSelected.png"), 
-			 unselected = love.graphics.newImage("StartUnselected.png"), 
+			{selected = love.graphics.newImage("assets/StartSelected.png"), 
+			 unselected = love.graphics.newImage("assets/StartUnselected.png"), 
 			 method = function() gameStarted = true end},
 
-			{selected = love.graphics.newImage("RulesSelected.png"), 
-			 unselected = love.graphics.newImage("RulesUnselected.png"), 
+			{selected = love.graphics.newImage("assets/RulesSelected.png"), 
+			 unselected = love.graphics.newImage("assets/RulesUnselected.png"), 
 			 method = function() viewingRules = true end}
 		   }
 	menuIndex = 1
