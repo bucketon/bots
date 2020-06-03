@@ -15,7 +15,6 @@ Recycler.mini = love.graphics.newImage("assets/recycler_mini.png")
 Recycler.number = 2
 function Recycler:die_(board)
 	board.deathsThisAttack = board.deathsThisAttack + 1
-	log("NUMBER OF BOTS AVAILABLE FOR RECYCLER: "..#board.deck)
 	local newBot = board.deck[#deck]
 	newBot.team = self.team
 	board:setTile(board:getBotPosition(self.number), newBot)

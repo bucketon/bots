@@ -1,3 +1,5 @@
+DEBUG_LOGGING_ON = true
+
 function shuffle(list)
 	for i = #list, 2, -1 do
 		local j = math.random(i)
@@ -68,8 +70,10 @@ function load()
 end
 
 function log(message)
-	local message = "["..os.date('%m/%d/%y %H:%M:%S').."]: "..message.."\n"
-	love.filesystem.append("BotsLog.txt", message)
+	if DEBUG_LOGGING_ON == true then
+		local message = "["..os.date('%m/%d/%y %H:%M:%S').."]: "..message.."\n"
+		love.filesystem.append("BotsLog.txt", message)
+	end
 end
 
 function love.errhand(error_message)

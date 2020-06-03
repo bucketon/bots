@@ -90,10 +90,8 @@ function AI:calculateTurn(hand, board)
 	for iter=1,#possibleMoves do
 		message = message..", "..possibleMoves[iter][3]
 	end
-	log("possibleMoves contains: "..message)
 	shuffle(possibleMoves)
 	table.sort (possibleMoves, function (left, right) return left[3] > right[3] end)
-	log("AI Choosing a move rated: "..possibleMoves[1][3])
 	return {space = possibleMoves[1][1], index = possibleMoves[1][2]}
 end
 

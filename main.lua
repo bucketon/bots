@@ -319,7 +319,9 @@ function returnCard(card)
 end
 
 function takePlayer2Turn()
+	DEBUG_LOGGING_ON = false --todo: come up with something better
 	local move = AI:calculateTurn(player2Hand, board)
+	DEBUG_LOGGING_ON = true
 	board:setTile(move.space, player2Hand[move.index])
 	local handLength = #player2Hand
 	player2Hand[move.index] = nil
