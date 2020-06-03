@@ -115,6 +115,7 @@ function Gameboard:progress()--solve one turn of combat
 				end
 			end
 
+			self:refresh()
 			currentBotStruct:postAttack(self)
 		else
 			recall = true
@@ -211,6 +212,65 @@ function Gameboard:declareWinner()
 	else
 		log("Since player one had "..scores[1].." survivors, and player two had "..scores[2].." survivors, player "..self.winner.." wins!")
 	end
+end
+
+function Gameboard:toString()
+	local boardString = "\n"
+	boardString = boardString..self:printLine_()
+	for y=1,self.boardHeight do
+		local row = {}
+		for x=1,self.boardWidth do
+			row[x] = self:getTile({x, y})
+		end
+		boardString = boardString..self:printSquares_(row)
+		boardString = boardString..self:printLine_()
+	end
+	return boardString
+end
+
+function Gameboard:printLine_()
+	--prints a solid divider line for the board
+	local line = "|"
+	for i=1,self.boardWidth do
+		line = line.."---|"
+	end
+	return line.."\n"
+end
+
+function Gameboard:printSquares_(row)
+	--prints a row of bot structs
+	local rowString = ""
+	--print the top row of characters
+	local line = "|"
+	for i=1,self.boardWidth do
+		local teamIndicator = " "
+		if row[i].team == 2 then
+			teamIndicator = "^"
+		end
+		line = line.." "..teamIndicator.." |"
+	end
+	rowString = rowString..line.."\n"
+	--print the second row of characters
+	line = "|"
+	for i=1,self.boardWidth do
+		local teamIndicator = " "
+		if row[i].team == 3 then
+			teamIndicator = "<"
+		end
+		line = line..teamIndicator..(row[i].number%10).." |"
+	end
+	rowString = rowString..line.."\n"
+	--print the bottom row of characters
+	line = "|"
+	for i=1,self.boardWidth do
+		local teamIndicator = " "
+		if row[i].team == 1 then
+			teamIndicator = "v"
+		end
+		line = line.." "..teamIndicator.." |"
+	end
+	rowString = rowString..line.."\n"
+	return rowString
 end
 
 function Gameboard:findNextBotPosition_()
