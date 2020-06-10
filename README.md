@@ -8,6 +8,10 @@ Instructions to run the game:
 
 Version History:
 ----------------
+**0.5.0**
+* Fixed interaction between EMP and Flayer
+* Made the AI stop printing excessive logs
+
 **0.4.0**
 * Refactored board to be better encapsulated (this shouldn't affect gameplay at all, so let me know if you notice any discrepancies).
 * Wrote a random inputs test mode to automatically find crashes (again, you shouldn't notice anything from this addition.

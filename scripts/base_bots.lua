@@ -15,7 +15,7 @@ Recycler.mini = love.graphics.newImage("assets/recycler_mini.png")
 Recycler.number = 2
 function Recycler:die_(board)
 	board.deathsThisAttack = board.deathsThisAttack + 1
-	local newBot = board.deck[#deck]
+	local newBot = board.deck[#board.deck]
 	newBot.team = self.team
 	board:setTile(board:getBotPosition(self.number), newBot)
 	log(self.name.."'s ability activated, causing it to come back to life as "..newBot.name..".")

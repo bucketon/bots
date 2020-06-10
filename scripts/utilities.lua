@@ -7,6 +7,10 @@ function shuffle(list)
 	end
 end
 
+function push(list, item)
+	list[#list+1] = item
+end
+
 function pop(list)
 	local item = list[#list]
 	list[#list] = nil

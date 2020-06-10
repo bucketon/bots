@@ -6,7 +6,8 @@ Gameboard = {
 	deathsThisAttack = 0,
 	winner = 0,
 	nextAttacker = 0,
-	deck = nil
+	deck = nil,
+	combatStarted = false
 }
 
 function Gameboard:new()
@@ -18,6 +19,7 @@ function Gameboard:new()
     o.board = {{}, {}, {}}
     o.nextAttacker = 0
     o.winner = 0
+    o.combatStarted = false
     return o
 end
 
@@ -61,6 +63,7 @@ function Gameboard:isBoardFull()
 			if self.board[x][y] == nil then return false end
 		end
 	end
+	self.combatStarted = true
 	return true
 end
 
