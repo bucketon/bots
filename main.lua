@@ -6,6 +6,8 @@ function love.load()
 	Bots = require("scripts/base_bots")
 	Gameboard = require("scripts/gameboard")
 	AI = require("scripts/AI")
+	HandCursor = require("scripts/hand_cursor")
+	BoardCursor = require("scripts/board_cursor")
 	blobReader = require("lib/BlobReader")
 	blobWriter = require("lib/BlobWriter")
 	math.randomseed(os.time())
@@ -16,19 +18,12 @@ function love.load()
 	love.graphics.setFont(font)
 	saveData = load()
 	relevantScoresCount = 100
+	frameCount = 0
+	floatingCardRates = {0, 0}
 
 	boardOffset = {160, 16}
 	boardTileDimensions = {64, 64}
 	boardTilePadding = 5
-
-	player1HandPositions = {}
-	for i=1,4 do
-		player1HandPositions[i] = {boardOffset[1]+(i-1)*50, 220}
-	end
-	player2HandPositions = {}
-	for i=1,4 do
-		player2HandPositions[i] = {boardOffset[1]+(i-1)*50, -50}
-	end
 
 	--The good stuff™
 	currentMode = {}
@@ -41,6 +36,7 @@ function love.keypressed(key, scancode, isrepeat)
 end
 
 function love.update(dt)
+	frameCount = frameCount + 1
 	currentMode[#currentMode]:update(dt)
 end
 

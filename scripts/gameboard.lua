@@ -24,7 +24,7 @@ function Gameboard:new()
 end
 
 function Gameboard:getTile(coord)
-	if coord[1] < 1 or coord[1] > self.boardWidth or coord[2] < 1 or coord[2] > self.boardHeight then return nil end
+	if coord == nil or coord[1] < 1 or coord[1] > self.boardWidth or coord[2] < 1 or coord[2] > self.boardHeight then return nil end
 	return self.board[coord[1]][coord[2]] 
 end
 

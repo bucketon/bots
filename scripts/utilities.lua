@@ -11,6 +11,12 @@ function push(list, item)
 	list[#list+1] = item
 end
 
+function append(list, item)--an immutable version of push
+	local ret = deepCopy(list)
+	push(ret, item)
+	return ret
+end
+
 function pop(list)
 	local item = list[#list]
 	list[#list] = nil
