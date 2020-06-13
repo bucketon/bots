@@ -18,7 +18,11 @@ function TitleMode:setup()
 
 			 {selected = love.graphics.newImage("assets/SandboxSelected.png"), 
 			 unselected = love.graphics.newImage("assets/SandboxUnselected.png"), 
-			 mode = require('scripts/sandbox')}
+			 mode = require('scripts/sandbox')},
+
+			 {selected = love.graphics.newImage("assets/PuzzleSelected.png"), 
+			 unselected = love.graphics.newImage("assets/PuzzleUnselected.png"), 
+			 mode = require('scripts/puzzle')}
 		   }
 	self.menuIndex = 1
 end

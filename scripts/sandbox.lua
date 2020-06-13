@@ -1,10 +1,10 @@
 Sandbox = {}
 
 function Sandbox:setup()
-	self:reset_()
+	self:restart_()
 end
 
-function Sandbox:reset_()
+function Sandbox:restart_()
 	self.player1Hand = {}
 	self.deck = {}
 	self.board = Gameboard:new()
@@ -57,6 +57,8 @@ function Sandbox:keypressed(key)
 			if self.playerTurnsDone then
 				if self.board.winner == 0 then
 					self.board:progress()
+				else
+					self:restart_()
 				end
 			else
 				--pick up card if in hand, put down card if on empty board space
@@ -117,6 +119,7 @@ end
 function Sandbox:endOfRound()
 	if self.board:isBoardFull() then
 		self.playerTurnsDone = true
+		self.board.deck = self.cursor.hand
 	end
 	self.board:refresh()
 end
@@ -125,6 +128,17 @@ function Sandbox:draw()
 	drawBoard(self.board, boardOffset)
 	drawCursor(self.cursor)
 	drawHand(self.cursor.hand, self.cursor.index, {1, 220}, 37)
+
+	--victory
+	if self.board.winner ~= 0 then
+		if self.board.winner == 1 then
+			love.graphics.draw(player1wins, 0, 88)
+		elseif self.board.winner == 2 then
+			love.graphics.draw(player2wins, 0, 88)
+		elseif self.board.winner == 3 then
+			love.graphics.draw(nbwins, 0, 88)
+		end
+	end
 end
 
 return Sandbox

@@ -17,6 +17,8 @@ function love.load()
 	font = love.graphics.newFont(18, "mono")
 	love.graphics.setFont(font)
 	saveData = load()
+	saveData.version = version
+	save(saveData)
 	relevantScoresCount = 100
 	frameCount = 0
 	floatingCardRates = {0, 0}
