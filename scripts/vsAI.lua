@@ -121,7 +121,9 @@ function VsAIMode:keypressed(key)
 
 	if key=="x" then
 		--put card back in hand if card picked up
-		self.cursor = self.cursor:replace()
+		if self.cursor.replace ~= nil and self.cursor.selectedCard ~= nil then
+			self.cursor = self.cursor:replace()
+		end
 	end
 end
 
@@ -174,7 +176,7 @@ function VsAIMode:endOfRound()
 	self.board:refresh()
 end
 
-function VsAIMode:draw()
+function VsAIMode:draw()    
 	drawBoard(self.board, boardOffset)
 	drawCursorAndHand(self.cursor)
 

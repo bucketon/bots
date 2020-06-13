@@ -6,10 +6,10 @@ function BoardCursor:new(board, hand, coord, selectedCard)
     self.__index = function (table, key)
       return self[key]
     end
-    self.coord = {math.min(math.max(1, coord[1]), board.boardWidth), math.min(math.max(1, coord[2]), board.boardHeight)}
-    self.hand = hand
-    self.board = board
-    self.selectedCard = selectedCard
+    o.coord = {math.min(math.max(1, coord[1]), board.boardWidth), math.min(math.max(1, coord[2]), board.boardHeight)}
+    o.hand = hand
+    o.board = board
+    o.selectedCard = selectedCard
     return o
 end
 
@@ -60,6 +60,17 @@ function BoardCursor:place()
 		return BoardCursor:new(self.board, self.hand, self.coord, nil), true
 	else
 		return self, false
+	end
+end
+
+function BoardCursor:pickup()
+	if self.board:getTile(self.coord) ~= nil then
+		local card = self.board:getTile(self.coord)
+		log("Player picked up "..card.name.." from the board at ["..self.coord[1]..", "..self.coord[2].."].")
+		self.board:setTile(self.coord, nil)
+		return BoardCursor:new(self.board, self.hand, self.coord, card)
+	else
+		return self
 	end
 end
 

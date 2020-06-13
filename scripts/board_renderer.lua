@@ -1,4 +1,6 @@
 function drawBoard(board, coord)
+	local position = {0, 0}
+	if coord ~= nil then position = coord end
 	local boardTilePositions = {}
 	for x=1,board.boardWidth do
 		boardTilePositions[x] = {}
@@ -11,10 +13,10 @@ function drawBoard(board, coord)
 
 	for x=1,board.boardWidth do
 		for y=1,board.boardHeight do
-			love.graphics.draw(space, boardTilePositions[x][y][1]-2+coord[1], boardTilePositions[x][y][2]-2+coord[2])
+			love.graphics.draw(space, boardTilePositions[x][y][1]-2+position[1], boardTilePositions[x][y][2]-2+position[2])
 			local thisBot = board:getTile({x, y})
 			if thisBot ~= nil then	
-				drawMiniCard(thisBot, {boardTilePositions[x][y][1]+boardOffset[1],boardTilePositions[x][y][2]+boardOffset[2]})
+				drawMiniCard(thisBot, {boardTilePositions[x][y][1]+position[1],boardTilePositions[x][y][2]+position[2]})
 				if thisBot.number == board.nextAttacker and board.combatStarted == true then
 				love.graphics.draw(attackIndicator, 0, 0)
 			end
@@ -23,7 +25,7 @@ function drawBoard(board, coord)
 	end
 
 	--thermometer
-	love.graphics.draw(thermometer, 208+coord[1], coord[2]-16)
+	love.graphics.draw(thermometer, 208+position[1], position[2]-16)
 	if board.combatStarted then
 		for i=1,board.currentbot do
 			if i <= 10 then
@@ -63,7 +65,7 @@ end
 
 function drawCursorAndHand(cursor)
 	drawCursor(cursor)
-	drawHand(cursor.hand, cursor.index, {boardOffset[1], 220})
+	drawHand(cursor.hand, cursor.index, {boardOffset[1], 220}, 50)
 	--draw instructions
 	local currentInstructions = 1
 	if cursor.selectedCard ~= nil then currentInstructions = 2 end
@@ -138,12 +140,14 @@ function drawCursor(cursor)
 	end
 end
 
-function drawHand(hand, selectedIndex, coord)
+function drawHand(hand, selectedIndex, coord, spacing)
+	local padding = 50
+	if spacing ~= nil then padding = spacing end
 	local handLength = 10
 	if hand.maxLength ~= nil then handLength = hand.maxLength end
 	local handPositions = {}
 	for i=1,handLength do
-		handPositions[i] = {coord[1]+(i-1)*50, coord[2]}
+		handPositions[i] = {coord[1]+(i-1)*padding, coord[2]}
 	end
 
 	for i=1,handLength do

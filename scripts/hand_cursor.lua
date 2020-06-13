@@ -8,13 +8,13 @@ function HandCursor:new(board, hand, index, mark)
     self.__index = function (table, key)
       return self[key]
     end
-    self.index = math.min(math.max(1, index), #hand)
-    self.hand = hand
-    self.board = board
+    o.index = math.min(math.max(1, index), #hand)
+    o.hand = hand
+    o.board = board
     if mark == nil then
-    	self.mark = nil
+    	o.mark = nil
     else
-    	self.mark = {math.min(math.max(1, mark[1]), board.boardWidth), math.min(math.max(1, mark[2]), board.boardHeight)}
+    	o.mark = {math.min(math.max(1, mark[1]), board.boardWidth), math.min(math.max(1, mark[2]), board.boardHeight)}
     end
     return o
 end
