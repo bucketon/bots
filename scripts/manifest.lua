@@ -63,3 +63,5 @@ mercury = {
 levelBox = love.graphics.newImage("assets/levelbox.png")
 checkmark = love.graphics.newImage("assets/checkmark.png")
 puzzleCursor = love.graphics.newImage("assets/puzzlecursor.png")
+heartEmpty = love.graphics.newImage("assets/heartempty.png")
+heartFull = love.graphics.newImage("assets/heartfull.png")
