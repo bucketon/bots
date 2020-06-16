@@ -79,6 +79,18 @@ function load()
 	end
 end
 
+function formatMenuString(string, selected, submenu)
+	local ret = deepCopy(string)
+	if selected == true then
+		ret = "Z:["..ret.."]"
+	end
+	if submenu == true then
+		ret = ret..">"
+	end
+	return ret
+end
+
+
 function log(message)
 	if DEBUG_LOGGING_ON == true then
 		local message = "["..os.date('%m/%d/%y %H:%M:%S').."]: "..message.."\n"

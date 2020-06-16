@@ -36,16 +36,18 @@ strengthBonus = {
 	love.graphics.newImage("assets/plusnine.png")
 }
 minicard = love.graphics.newImage("assets/minicard.png")
+minicardevil = love.graphics.newImage("assets/minicardevil.png")
 thermometer = love.graphics.newImage("assets/thermometer.png")
 instructions = {
 	love.graphics.newImage("assets/instructionsA.png"),
 	love.graphics.newImage("assets/instructionsB.png"),
 	love.graphics.newImage("assets/instructionsC.png")
 }
-arrowInstructions = love.graphics.newImage("assets/instructions_arrows.png")
 player1wins = love.graphics.newImage("assets/player1wins.png")
 player2wins = love.graphics.newImage("assets/player2wins.png")
 nbwins = love.graphics.newImage("assets/neutralbotwins.png")
+clear = love.graphics.newImage("assets/Clear.png")
+tooBad = love.graphics.newImage("assets/TooBad.png")
 mercury = {
 	love.graphics.newImage("assets/therm_1.png"),
 	love.graphics.newImage("assets/therm_2.png"),
@@ -58,4 +60,6 @@ mercury = {
 	love.graphics.newImage("assets/therm_9.png"),
 	love.graphics.newImage("assets/therm_10.png")
 }
-	
+levelBox = love.graphics.newImage("assets/levelbox.png")
+checkmark = love.graphics.newImage("assets/checkmark.png")
+puzzleCursor = love.graphics.newImage("assets/puzzlecursor.png")

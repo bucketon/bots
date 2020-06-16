@@ -47,7 +47,11 @@ function drawMiniCard(bot, position)
 	else
 		local canvas = love.graphics.newCanvas()
 		canvas:renderTo(function()
-			love.graphics.draw(minicard, 0, 0)
+			if bot.team == 2 then
+				love.graphics.draw(minicardevil, 0, 0)
+			else
+				love.graphics.draw(minicard, 0, 0)
+			end
 			love.graphics.draw(bot.mini, 0, 0)
 			love.graphics.draw(arrow, arrow:getWidth()/2, arrow:getHeight()/2, angle, 1, 1, arrow:getWidth()/2, arrow:getHeight()/2)
 			local totalStrength = bot:getTotalStrength()
@@ -71,7 +75,6 @@ function drawCursorAndHand(cursor)
 	if cursor.selectedCard ~= nil then currentInstructions = 2 end
 	if cursor.board.combatStarted == true then currentInstructions = 3 end
 	love.graphics.draw(instructions[currentInstructions], 0, 224)
-	love.graphics.draw(arrowInstructions, 0, 0)
 end
 
 function drawCursor(cursor)

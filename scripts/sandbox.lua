@@ -14,6 +14,7 @@ function Sandbox:restart_()
 	self.board.deck = self.player1Hand
 	self.playerTurnsDone = false
 	self.determineTeam = false
+	self.board:refresh()
 end
 
 function Sandbox:keypressed(key)
@@ -86,6 +87,9 @@ function Sandbox:keypressed(key)
 			--put card back in hand if card picked up
 			if self.cursor.replace ~= nil and self.cursor.selectedCard ~= nil then
 				self.cursor = self.cursor:replace()
+			else
+				push(currentMode, PauseMode)
+				currentMode[#currentMode]:setup()
 			end
 		end
 	end

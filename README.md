@@ -11,6 +11,11 @@ Version History:
 **0.5.0**
 * Fixed interaction between EMP and Flayer
 * Made the AI stop printing excessive logs
+* Made the menu uglier and more useful
+* Added Sandbox mode for trying things out
+* Added Survival mode against the AI
+* Added Puzzle mode
+* Made enemy bots look slightly more distinct
 
 **0.4.0**
 * Refactored board to be better encapsulated (this shouldn't affect gameplay at all, so let me know if you notice any discrepancies).

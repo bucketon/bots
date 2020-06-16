@@ -2,32 +2,33 @@ TitleMode = {}
 
 function TitleMode:setup()
 	self.title = love.graphics.newImage("assets/title.png")
-	self.score = calculateScore()
+	local puzzleList = require('scripts/puzzle_list')
 	self.menu = {
-			{selected = love.graphics.newImage("assets/StartSelected.png"), 
-			 unselected = love.graphics.newImage("assets/StartUnselected.png"), 
-			 mode = require('scripts/vsAI')},
+			{label = "VS AI",
+				{label = "Classic (High Score: "..calculateClassicScore()..")",
+			 	mode = require('scripts/vsAI')},
+			 	{label = "Survival (High Score: "..calculateSurvivalScore()..")",
+			 	mode = require('scripts/survival')}
+			},
 
-			{selected = love.graphics.newImage("assets/RulesSelected.png"), 
-			 unselected = love.graphics.newImage("assets/RulesUnselected.png"), 
-			 mode = require('scripts/rules')},
+			{label = "Puzzle ("..calculatePuzzleScore().."/"..#puzzleList.." Complete)", 
+			mode = require('scripts/puzzle_select')},
 
-			 {selected = love.graphics.newImage("assets/AutoplaySelected.png"), 
-			 unselected = love.graphics.newImage("assets/AutoplayUnselected.png"), 
-			 mode = require('scripts/autoplay')},
-
-			 {selected = love.graphics.newImage("assets/SandboxSelected.png"), 
-			 unselected = love.graphics.newImage("assets/SandboxUnselected.png"), 
-			 mode = require('scripts/sandbox')},
-
-			 {selected = love.graphics.newImage("assets/PuzzleSelected.png"), 
-			 unselected = love.graphics.newImage("assets/PuzzleUnselected.png"), 
-			 mode = require('scripts/puzzle')}
+			{label = "Help", 
+				--{label = "Autoplay", 
+				--mode = require('scripts/autoplay')},
+				{label = "How to Play", 
+			 	mode = require('scripts/rules')},
+				{label = "Sandbox", 
+				mode = require('scripts/sandbox')}
+			},
 		   }
+	self.menuStack = {}
+	self.menuIndexStack = {}
 	self.menuIndex = 1
 end
 
-function calculateScore()
+function calculateClassicScore()
 	local score = 0
 	if saveData.score ~= nil then
 		local last = math.max(1, #saveData.score - relevantScoresCount)
@@ -39,10 +40,42 @@ function calculateScore()
 	return score
 end
 
+function calculateSurvivalScore()
+	if saveData.survivalScore == nil then
+		saveData.survivalScore = 0
+	end
+	return saveData.survivalScore
+end
+
+function calculatePuzzleScore()
+	local score = 0
+	if saveData.puzzleProgress ~= nil then
+		for i=1,#saveData.puzzleProgress do
+			if saveData.puzzleProgress[i] ~= nil then
+				score = score + saveData.puzzleProgress[i]
+			end
+		end
+	end
+	return score
+end
+
 function TitleMode:keypressed(key)
 	if key == "z" then
-		push(currentMode, self.menu[self.menuIndex].mode)
-		currentMode[#currentMode]:setup()
+		if self.menu[self.menuIndex].mode ~= nil then
+			push(currentMode, self.menu[self.menuIndex].mode)
+			currentMode[#currentMode]:setup()
+		else
+			push(self.menuStack, self.menu)
+			push(self.menuIndexStack, self.menuIndex)
+			self.menu = self.menu[self.menuIndex]
+			self.menuIndex = 1
+		end
+	end
+	if key == "x" then
+		if #self.menuStack > 0 then
+			self.menu = pop(self.menuStack)
+			self.menuIndex = pop(self.menuIndexStack)
+		end
 	end
 	if key == "up" then
 		self.menuIndex = math.max(1, self.menuIndex - 1)
@@ -59,28 +92,19 @@ end
 function TitleMode:draw()
 	love.graphics.draw(self.title, 0, 0)
 	self:drawMenu()
-	self:drawScore()
 end
 
 function TitleMode:drawMenu()
 	local padding = 5
 	local bottomMargin = 20
-	local menuItemHeight = self.menu[1].selected:getHeight()
+	local menuItemHeight = 18
 	local totalMenuHeight = menuItemHeight*#self.menu + padding*(#self.menu-1)
 	for i=1,#self.menu do
-		local drawable
-		if self.menuIndex == i then
-			drawable = self.menu[i].selected
-		else
-			drawable = self.menu[i].unselected
-		end
-		local position = {400/2 - drawable:getWidth()/2, 240 - (totalMenuHeight + bottomMargin) + (menuItemHeight+padding)*(i-1)}
+		local drawable = love.graphics.newText(font, formatMenuString(self.menu[i].label, self.menuIndex == i, false))
+		local position = {math.floor(400/2 - drawable:getWidth()/2), 
+		math.floor(240 - (totalMenuHeight + bottomMargin) + (menuItemHeight+padding)*(i-1))}
 		love.graphics.draw(drawable, position[1], position[2])
 	end
-end
-
-function TitleMode:drawScore()
-	love.graphics.print("Current Score: "..self.score, 0, 0)
 end
 
 return TitleMode

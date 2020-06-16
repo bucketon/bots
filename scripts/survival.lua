@@ -1,42 +1,68 @@
-VsAIMode = {}
+Survival = {}
 
-function VsAIMode:setup()
+function Survival:setup()
+	if saveData.survivalScore == nil then
+		saveData.survivalScore = 0
+	end
 	self.player1Hand = {}
 	self.player2Hand = {}
 	self.deck = {}
 	self.board = Gameboard:new()
+	self.deckPrototype = {
+		Bots.Arcenbot,
+		Bots.Recycler,
+		Bots.Injector,
+		Bots.Ratchet,
+		Bots.EMPBot,
+		Bots.SpyBot,
+		Bots.Booster,
+		Bots.LaserCannon,
+		Bots.Thresher,
+		Bots.Renegade
+	}
 	self:fillDeck()
 	shuffle(self.deck)
-	self.board.deck = self.deck
 	self.playerTurnsDone = false
 	self.cursor = BoardCursor:new(self.board, self.player1Hand, {2, 2}, nil)
 	self.player2TurnTimer = 0
 	self.player2TurnTime = 50
 	self.gameCount = 0
-	self.AIWinCount = 0
 	self.neutralBot = nil
 	self:deal()
+	self.board.deck = self.deck
 	self.player2HandPositions = {}
 	for i=1,4 do
 		self.player2HandPositions[i] = {boardOffset[1]+(i-1)*50, -50}
 	end
 
-	log("GAME START: Started a new game against the AI!")
+	log("GAME START: Started a new survival game against the AI!")
 end
 
-function VsAIMode:restart_()
-	self:setup()
+function Survival:restart_()
+	self.player1Hand = {}
+	self.player2Hand = {}
+	self.deck = {}
+	self.board = self:copyBoard(self.board)
+	self:fillDeck()
+	shuffle(self.deck)
+	self.playerTurnsDone = false
+	self.cursor = BoardCursor:new(self.board, self.player1Hand, {2, 2}, nil)
+	self.player2TurnTimer = 0
+	self:deal()
+	self.board.deck = self.deck
 end
 
-function VsAIMode:deal()
+function Survival:deal()
+	if self.board:getTile({2, 2}) == nil then
+		local card = pop(self.deck)
+		card.team = 3
+		card.facedown = true
+		self.neutralBot = card
+		self.board:setTile({2, 2}, card)
+	end
+	self.deck = defrag(self.deck, 10)
 	for i=1,#self.deck-1 do
-		if i == 1 then
-			local card = pop(self.deck)
-			card.team = 3
-			card.facedown = true
-			self.neutralBot = card
-			self.board:setTile({2, 2}, card)
-		elseif i%2 == 1 then
+		if i%2 == 1 then
 			local card = pop(self.deck)
 			card.team = 1
 			push(self.player1Hand, card)
@@ -49,20 +75,39 @@ function VsAIMode:deal()
 	self.player1Hand.maxLength = #self.player1Hand
 end
 
-function VsAIMode:fillDeck() --the classic bots set
-	self.deck[1] = Bots.Arcenbot:new()
-	self.deck[2] = Bots.Recycler:new()
-	self.deck[3] = Bots.Injector:new()
-	self.deck[4] = Bots.Ratchet:new()
-	self.deck[5] = Bots.EMPBot:new()
-	self.deck[6] = Bots.SpyBot:new()
-	self.deck[7] = Bots.Booster:new()
-	self.deck[8] = Bots.LaserCannon:new()
-	self.deck[9] = Bots.Thresher:new()
-	self.deck[10] = Bots.Renegade:new()
+function Survival:copyBoard(board)
+	local ret = Gameboard:new()
+	for x=1,self.board.boardWidth do
+		for y=1,self.board.boardHeight do
+			local card = board:getTile({x, y})
+			if card ~= nil then
+				local newCard = self.deckPrototype[card.number]:new()
+				newCard.team = card.team
+				ret:setTile({x, y}, newCard)
+			end
+		end
+	end
+	return ret
 end
 
-function VsAIMode:keypressed(key)
+function Survival:fillDeck() --the classic bots set
+	local unusedBots = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	for x=1,self.board.boardWidth do
+		for y=1,self.board.boardHeight do
+			local card = self.board:getTile({x, y})
+			if card ~= nil then
+				unusedBots[card.number] = nil
+			end
+		end
+	end
+	for i=1,10 do
+		if unusedBots[i] ~= nil then
+			push(self.deck, self.deckPrototype[unusedBots[i]]:new())
+		end
+	end
+end
+
+function Survival:keypressed(key)
 	if key=="left" then
 		self.cursor = self.cursor:left()
 	end
@@ -82,22 +127,18 @@ function VsAIMode:keypressed(key)
 			if self.board.winner == 0 then
 				self.board:progress()
 			else
-				self.gameCount = self.gameCount + 1
-				if self.board.winner == 2 then
-					self.AIWinCount = self.AIWinCount + 1
-				end
-				--log("AI has won "..AIWinCount.." times out of "..gameCount.." so far.")
-				if saveData.score == nil then
-					saveData.score = {}
-				end
+				--probably want to keep track of some high score biz
 				if self.board.winner == 1 then
-					saveData.score[#saveData.score+1] = 1
+					self.gameCount = self.gameCount + 1
+					if self.gameCount > saveData.survivalScore then
+						saveData.survivalScore = self.gameCount
+						save(saveData)
+					end
+					self:restart_()
 				else
-					saveData.score[#saveData.score+1] = 0
+					--lost, kick them out all the way
+					self:setup()
 				end
-				self:cleanupScores()
-				save(saveData)
-				self:restart_()
 			end
 		else
 			--pick up card if in hand, put down card if on empty board space
@@ -130,13 +171,17 @@ function VsAIMode:keypressed(key)
 	end
 end
 
-function VsAIMode:endPlayer1Turn()
-	floatingCardRates = {math.random()*4.0, math.random()*4.0}
-	self.player2TurnTimer = 1
-	self.board:refresh()
+function Survival:endPlayer1Turn()
+	if self.board:isBoardFull() then
+		self:endOfRound()
+	else
+		floatingCardRates = {math.random()*4.0, math.random()*4.0}
+		self.player2TurnTimer = 1
+		self.board:refresh()
+	end
 end
 
-function VsAIMode:update(dt)
+function Survival:update(dt)
 	--make the AI player take time
 	if self.player2TurnTimer > 0 then
 		self.player2TurnTimer = self.player2TurnTimer + 1
@@ -147,7 +192,7 @@ function VsAIMode:update(dt)
 	end
 end
 
-function VsAIMode:cleanupScores()
+function Survival:cleanupScores()
 	if #saveData.score > 2*relevantScoresCount then
 		for i=1,(#saveData.score - relevantScoresCount) do
 			saveData.score[i] = nil
@@ -156,7 +201,7 @@ function VsAIMode:cleanupScores()
 	end
 end
 
-function VsAIMode:takePlayer2Turn()
+function Survival:takePlayer2Turn()
 	DEBUG_LOGGING_ON = false --todo: come up with something better
 	local move = AI:calculateTurn(self.player2Hand, self.board)
 	DEBUG_LOGGING_ON = true
@@ -167,7 +212,7 @@ function VsAIMode:takePlayer2Turn()
 	self:endOfRound()
 end
 
-function VsAIMode:endOfRound()
+function Survival:endOfRound()
 	if self.board:isBoardFull() then
 		self.neutralBot.facedown = false
 		self.playerTurnsDone = true
@@ -179,7 +224,7 @@ function VsAIMode:endOfRound()
 	self.board:refresh()
 end
 
-function VsAIMode:draw()    
+function Survival:draw()    
 	drawBoard(self.board, boardOffset)
 	drawCursorAndHand(self.cursor)
 
@@ -189,6 +234,8 @@ function VsAIMode:draw()
 			love.graphics.draw(cardback, self.player2HandPositions[i][1], self.player2HandPositions[i][2])
 		end
 	end
+
+	love.graphics.print("current streak: "..self.gameCount, 0, -3)
 
 	--victory
 	if self.board.winner ~= 0 then
@@ -202,4 +249,4 @@ function VsAIMode:draw()
 	end
 end
 
-return VsAIMode
+return Survival
