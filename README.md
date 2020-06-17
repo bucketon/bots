@@ -8,6 +8,10 @@ Instructions to run the game:
 
 Version History:
 ----------------
+**0.6.0**
+* Added options menu with option to switch to 2x resolution and option to delete save
+* Added 1 new puzzle
+
 **0.5.0**
 * Fixed interaction between EMP and Flayer
 * Made the AI stop printing excessive logs

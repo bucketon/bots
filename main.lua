@@ -22,7 +22,7 @@ function love.load()
 	HandCursor = require("scripts/hand_cursor")
 	BoardCursor = require("scripts/board_cursor")
 	math.randomseed(os.time())
-	version = "0.5.0"
+	version = "0.6.0"
 	love.window.setTitle("Bots "..version)
 	love.graphics.setColor(1, 1, 1, 1)
 	font = love.graphics.newFont(18, "mono")
