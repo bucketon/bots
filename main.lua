@@ -1,4 +1,6 @@
 function love.load()
+	DoubleResolution = true
+	love.graphics.setDefaultFilter("nearest","nearest")
 	require("scripts/manifest")
 	require("scripts/utilities")
 	require("scripts/board_renderer")
@@ -44,5 +46,8 @@ function love.update(dt)
 end
 
 function love.draw()
+	if DoubleResolution == true then
+		love.graphics.scale(2.0, 2.0)
+	end
 	currentMode[#currentMode]:draw()
 end
