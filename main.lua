@@ -1,8 +1,18 @@
 function love.load()
-	DoubleResolution = true
+	blobReader = require("lib/BlobReader")
+	blobWriter = require("lib/BlobWriter")
+	require("scripts/utilities")
+	saveData = load()
+	if saveData.DoubleResolution == nil then
+		saveData.DoubleResolution = false
+	end
+	if saveData.DoubleResolution == true then
+		love.window.setMode(800, 480)
+    else
+    	love.window.setMode(400, 240)
+    end
 	love.graphics.setDefaultFilter("nearest","nearest")
 	require("scripts/manifest")
-	require("scripts/utilities")
 	require("scripts/board_renderer")
 	Bot = require("scripts/bot")
 	Bots = require("scripts/base_bots")
@@ -11,15 +21,12 @@ function love.load()
 	PauseMode = require("scripts/pause")
 	HandCursor = require("scripts/hand_cursor")
 	BoardCursor = require("scripts/board_cursor")
-	blobReader = require("lib/BlobReader")
-	blobWriter = require("lib/BlobWriter")
 	math.randomseed(os.time())
 	version = "0.5.0"
 	love.window.setTitle("Bots "..version)
 	love.graphics.setColor(1, 1, 1, 1)
 	font = love.graphics.newFont(18, "mono")
 	love.graphics.setFont(font)
-	saveData = load()
 	saveData.version = version
 	save(saveData)
 	relevantScoresCount = 100
@@ -46,7 +53,7 @@ function love.update(dt)
 end
 
 function love.draw()
-	if DoubleResolution == true then
+	if saveData.DoubleResolution == true then
 		love.graphics.scale(2.0, 2.0)
 	end
 	currentMode[#currentMode]:draw()

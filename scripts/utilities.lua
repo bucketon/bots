@@ -79,6 +79,15 @@ function load()
 	end
 end
 
+function backUp(data)
+	local dir = love.filesystem.getSaveDirectory()
+	blob = blobWriter()
+	blob:write(data)
+	local file = io.open(dir..'/savedata.prev', 'wb')
+	file:write(blob:tostring())
+	file:close()
+end
+
 function formatMenuString(string, selected, submenu)
 	local ret = deepCopy(string)
 	if selected == true then

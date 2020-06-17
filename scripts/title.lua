@@ -20,7 +20,9 @@ function TitleMode:setup()
 				{label = "How to Play", 
 			 	mode = require('scripts/rules')},
 				{label = "Sandbox", 
-				mode = require('scripts/sandbox')}
+				mode = require('scripts/sandbox')},
+				{label = "Options", 
+				mode = require('scripts/options')},
 			},
 		   }
 	self.menuStack = {}
@@ -100,7 +102,7 @@ function TitleMode:drawMenu()
 	local menuItemHeight = 18
 	local totalMenuHeight = menuItemHeight*#self.menu + padding*(#self.menu-1)
 	for i=1,#self.menu do
-		local drawable = love.graphics.newText(font, formatMenuString(self.menu[i].label, self.menuIndex == i, false))
+		local drawable = love.graphics.newText(font, formatMenuString(self.menu[i].label, self.menuIndex == i, self.menu[i].mode ==  nil))
 		local position = {math.floor(400/2 - drawable:getWidth()/2), 
 		math.floor(240 - (totalMenuHeight + bottomMargin) + (menuItemHeight+padding)*(i-1))}
 		love.graphics.draw(drawable, position[1], position[2])

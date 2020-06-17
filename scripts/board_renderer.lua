@@ -45,7 +45,7 @@ function drawMiniCard(bot, position)
 	if bot.facedown == true then
 		love.graphics.draw(cardback, position[1], position[2])
 	else
-		if DoubleResolution == true then
+		if saveData.DoubleResolution == true then
 			love.graphics.scale(0.5, 0.5)
 		end
 		local canvas = love.graphics.newCanvas()
@@ -66,7 +66,7 @@ function drawMiniCard(bot, position)
 				love.graphics.draw(boostMiniIndicator, 0, 0)
 			end
 		end)
-		if DoubleResolution == true then
+		if saveData.DoubleResolution == true then
 			love.graphics.scale(2.0, 2.0)
 		end
 		love.graphics.draw(canvas, position[1], position[2])

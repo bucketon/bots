@@ -14,7 +14,7 @@ function PuzzleSelect:setup()
 			earliestIncomplete = i
 		end
 	end
-	self.rowLength = 5
+	self.rowLength = 6
 	self.menuIndex = earliestIncomplete
 	self.puzzleMode = require('scripts/puzzle')
 end
@@ -55,8 +55,8 @@ function PuzzleSelect:drawMenu()
 	local levelFont = love.graphics.newFont(50, "mono")
 	love.graphics.setFont(levelFont)
 	for i=1,#self.puzzleList do
-		local row = math.floor(i/self.rowLength)
-		local coord = {i%self.rowLength*64, row*64}
+		local row = math.floor((i-1)/self.rowLength)
+		local coord = {(i-1)%self.rowLength*64+8, row*64}
 		love.graphics.draw(levelBox, coord[1], coord[2])
 		love.graphics.print(i, coord[1]+15, coord[2]+2)
 		if saveData.puzzleProgress[i] == 1 then

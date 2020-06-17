@@ -66,11 +66,29 @@ Puzzle04 = {
 	deck = {Thresher:new()}
 }
 
+Puzzle05 = {
+	board = {
+		{bot = Recycler:new(), 		coord = {2, 1}, team = 2},
+		{bot = Thresher:new(), 		coord = {2, 2}, team = 3},
+		{bot = Arcenbot:new(), 		coord = {3, 2}, team = 2},
+		{bot = LaserCannon:new(), 	coord = {1, 2}, team = 2},
+		{bot = Renegade:new(), 		coord = {2, 3}, team = 2}
+	},
+	hand = {
+		{bot = Injector:new(), team = 1},
+		{bot = Ratchet:new(), team = 1},
+		{bot = EMPBot:new(), team = 1},
+		{bot = Booster:new(), team = 1}
+	},
+	deck = {SpyBot:new()}
+}
+
 PuzzleList = {
 	Puzzle01,
 	Puzzle02,
 	Puzzle03,
-	Puzzle04
+	Puzzle04,
+	Puzzle05,
 }
 
 return PuzzleList
