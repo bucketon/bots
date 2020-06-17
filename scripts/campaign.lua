@@ -7,7 +7,25 @@ between segments. It also handles globally necessary functions like saving and l
 ]]--
 
 function CampaignMode:setup()
-	
+	self.campaign = self:loadFile(saveData)
+	self.masterDeck = self:starterDeck()
+end
+
+function CampaignMode:starterDeck()
+	local deck = {}
+end
+
+function CampaignMode:loadFile(data)
+	if data.campaign == nil then
+		data.campaign = {}
+		data.campaign.popularity = 3
+		--initialize campaign here.
+	end
+	return data.campaign
+end
+
+function CampaignMode:saveFile(campaign)
+	data.campaign = campaign
 end
 
 function CampaignMode:keypressed(key)
