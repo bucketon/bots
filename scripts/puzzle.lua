@@ -113,7 +113,7 @@ function Puzzle:update(dt)
 end
 
 function Puzzle:isPuzzleCard(coord)
-	local puzzle = self.puzzleList[saveData.currentPuzzle]
+	local puzzle = self.puzzleList[self.index]
 	for i=1,#puzzle.board do
 		if areEqual(puzzle.board[i].coord, coord) then
 			return true

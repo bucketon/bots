@@ -18,7 +18,9 @@ function OptionsMode:refresh()
 				{label = "2x Resolution: "..DoubleResolutionValue,
 			 	method = self.toggle2xResolution},
 			 	{label = "Clear Save Data",
-			 	method = self.clearSave},
+			 		{label = "Are you sure? Z:yes, X:no",
+			 		method = self.clearSave},
+			 	}
 		   }
 end
 
@@ -37,6 +39,12 @@ function OptionsMode:clearSave()
 	backUp(saveData)
 	saveData = {}
 	save(saveData)
+	if saveData.DoubleResolution == true then
+		love.window.setMode(800, 480)
+    else
+    	love.window.setMode(400, 240)
+    end
+    self:refresh()
 end
 
 function OptionsMode:keypressed(key)

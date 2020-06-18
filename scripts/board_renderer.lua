@@ -101,13 +101,6 @@ function drawCursor(cursor)
 		love.graphics.draw(neutralBotCard, 0, 0)
 	elseif cursor.selectedCard ~= nil then
 		love.graphics.draw(cursor.selectedCard.image, 0, 0)
-		local bonusStrength = cursor.selectedCard:getTotalStrength() - cursor.selectedCard.number
-		if bonusStrength ~= 0 then
-			love.graphics.draw(strengthBonus[bonusStrength], 20, 50)
-		end
-		if cursor.selectedCard.EMP == true then
-			love.graphics.draw(empIndicator, 23, 157)
-		end
 	elseif cursor.index ~= nil then
 		local hoveredBot = cursor.hand[cursor.index]
 		if hoveredBot ~= nil then
@@ -117,6 +110,13 @@ function drawCursor(cursor)
 		local hoveredBot = cursor.board:getTile(cursor.coord)
 		if hoveredBot ~= nil then
 			love.graphics.draw(hoveredBot.image, 0, 0)
+			local bonusStrength = hoveredBot:getTotalStrength() - hoveredBot.number
+			if bonusStrength ~= 0 then
+				love.graphics.draw(strengthBonus[bonusStrength], 20, 50)
+			end
+			if hoveredBot.EMP == true then
+				love.graphics.draw(empIndicator, 23, 157)
+			end
 		end
 	end
 

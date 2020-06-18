@@ -10,7 +10,7 @@ Version History:
 ----------------
 **0.6.0**
 * Added options menu with option to switch to 2x resolution and option to delete save
-* Added 1 new puzzle
+* Added 2 new puzzles
 
 **0.5.0**
 * Fixed interaction between EMP and Flayer
