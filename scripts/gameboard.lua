@@ -3,7 +3,7 @@ Gameboard = {
 	currentbot = 1,
 	boardWidth = 3,
 	boardHeight = 3,
-	deathsThisAttack = 0,
+	deathsThisAttack = {},
 	winner = 0,
 	nextAttacker = 0,
 	deck = nil,
@@ -75,7 +75,7 @@ function Gameboard:progress()--solve one turn of combat
 
 	self:refresh()
 
-	self.deathsThisAttack = 0
+	self.deathsThisAttack = {}
 
 	local currentBotPosition = self:findNextBotPosition_()
 	if currentBotPosition ~= nil then
@@ -149,6 +149,7 @@ function Gameboard:refresh()
 			if self:getTile({x, y}) ~= nil then 
 				self.board[x][y].tempMods = 0
 				self.board[x][y].EMP = false
+				self.board[x][y].paralysis = false
 				self.board[x][y].animation = false
 				botList[#botList+1] = self.board[x][y]
 			end 

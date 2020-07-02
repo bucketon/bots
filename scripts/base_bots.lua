@@ -13,8 +13,8 @@ Recycler.name = "Recycler"
 Recycler.image = love.graphics.newImage("assets/recycler.png")
 Recycler.mini = love.graphics.newImage("assets/recycler_mini.png")
 Recycler.number = 2
-function Recycler:die_(board)
-	board.deathsThisAttack = board.deathsThisAttack + 1
+function Recycler:die_(board, killer)
+	push(board.deathsThisAttack, self)
 	local newBot = board.deck[#board.deck]
 	newBot.team = self.team
 	board:setTile(board:getBotPosition(self.number), newBot)
@@ -40,7 +40,7 @@ Ratchet.image = love.graphics.newImage("assets/ratchet.png")
 Ratchet.mini = love.graphics.newImage("assets/ratchet_mini.png")
 Ratchet.number = 4
 function Ratchet:postAttack_(board)
-	if board.deathsThisAttack > 0 then
+	if #board.deathsThisAttack > 0 then
 		log(self.name.."'s ability activated, causing it to attack again with strength "..self:getTotalStrength(board)..".")
 		board.currentbot = self.number
 		self.permMods = self.permMods + 2
@@ -75,7 +75,7 @@ function SpyBot:attack_(board, other)
 	if other == nil then return end
 	if self:getTotalStrength(board) <= other:getTotalStrength(board) and self.team ~= other.team then
 		log(self.name.."'s ability activated, allowing it to kill "..other.name.." even though it is smaller.")
-		other:die(board)
+		other:die(board, self)
 	end
 end
 
@@ -120,7 +120,7 @@ function LaserCannon:preAttack_(board)
 	if neighbors[strongestBotIndex] ~= nil then
 		log(self.name.."'s ability activates, killing "..neighbors[strongestBotIndex].name
 			.." (strength "..neighbors[strongestBotIndex]:getTotalStrength(board)..").")
-		neighbors[strongestBotIndex]:die(board)
+		neighbors[strongestBotIndex]:die(board, self)
 	end
 end
 
@@ -151,7 +151,7 @@ function Renegade:attack_(board, other)
 		log(self.name.."'s ability made it attack "..other.name.." even though they are on the same team.")
 	end
 	if self:getTotalStrength(board) >= other:getTotalStrength(board) then
-		other:die(board)
+		other:die(board, self)
 	end
 end
 

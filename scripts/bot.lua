@@ -6,6 +6,7 @@ Bot = {
 	tempMods = 0, 
 	permMods = 0, 
 	EMP = false,
+	Paralyzed = false,
 	image = nil,
 	mini = nil,
 	facedown = false,
@@ -18,6 +19,7 @@ function Bot:new ()
       return self[key]
     end
     o.EMP = false
+    o.Paralyzed = false
     return o
 end
 
@@ -71,13 +73,17 @@ function Bot:preAttack_(board)
 end
 
 function Bot:attack(board, other)
-	if self.EMP == false then
-		self:attack_(board, other)
-	else
-		if Bot.attack_ ~= self.attack_ then
-			log(self.name.."'s ability didn't work due to EMP!")
+	if self.Paralyzed == false then
+		if self.EMP == false then
+			self:attack_(board, other)
+		else
+			if Bot.attack_ ~= self.attack_ then
+				log(self.name.."'s ability didn't work due to EMP!")
+			end
+			Bot.attack_(self, board, other)
 		end
-		Bot.attack_(self, board, other)
+	else
+		log(self.name.." couldn't attack due to paralysis!")
 	end
 end
 
@@ -85,7 +91,7 @@ function Bot:attack_(board, other)
 	if other == nil then return end
 	if self:getTotalStrength() >= other:getTotalStrength() and self.team ~= other.team then
 		log(self.name.." attacked "..other.name..", killing it.")
-		other:die(board)
+		other:die(board, self)
 	elseif self.team ~= other.team then
 		log(self.name.." attacked "..other.name..", but couldn't kill it.")
 	end
@@ -105,19 +111,19 @@ end
 function Bot:postAttack_(board)
 end
 
-function Bot:die(board)
+function Bot:die(board, killer)
 	if self.EMP == false then
-		self:die_(board)
+		self:die_(board, killer)
 	else
 		if Bot.die_ ~= self.die_ then
 			log(self.name.."'s ability didn't work due to EMP!")
 		end
-		Bot.die_(self, board)
+		Bot.die_(self, board, killer)
 	end
 end
 
-function Bot:die_(board)
-	board.deathsThisAttack = board.deathsThisAttack + 1
+function Bot:die_(board, killer)
+	push(board.deathsThisAttack, self)
 	local position = board:getBotPosition(self.number)
 	if position == nil then return end
 	board:setTile(position, nil)
