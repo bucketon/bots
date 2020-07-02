@@ -23,6 +23,21 @@ function pop(list)
 	return item
 end
 
+function first(list, item)
+	local n = 0
+	if list.n ~= nil then 
+		n = list.n 
+	else
+		n = #list
+	end
+	for i=1,n do
+		if list[i] == item then
+			return i
+		end
+	end
+	return nil
+end
+
 function defrag(list, length)
 	local ret = {}
 	for i=1,length do

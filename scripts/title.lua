@@ -14,6 +14,9 @@ function TitleMode:setup()
 			{label = "Puzzle ("..calculatePuzzleScore().."/"..#puzzleList.." Complete)", 
 			mode = require('scripts/puzzle_select')},
 
+			{label = "Online", 
+			mode = require('scripts/classic_online')},
+
 			{label = "Help", 
 				--{label = "Autoplay", 
 				--mode = require('scripts/autoplay')},
