@@ -5,7 +5,7 @@ function ClassicOnlineMode:setup()
 	currentMode[#currentMode]:setup()
 end
 
-function ClassicOnlineMode:start(host, event)
+function ClassicOnlineMode:start(host, peer)
 	self.host = host
 	self.player1Hand = {}
 	self.player1Hand.n = 4
@@ -17,17 +17,19 @@ function ClassicOnlineMode:start(host, event)
 	self.lastMove = {}
 	self.enemyTurn = false
 	self.peer = nil
-	self.playerWinCount = 0
+	self.isHost = false
+	if self.gameCount == nil then self.gameCount = 0 end
+	if self.playerWinCount == nil then self.playerWinCount = 0 end
 
-	if event ~= nil then
-		self.peer = event.peer
+	if peer ~= nil then
+		self.peer = peer
 		self:fillDeck()
 		shuffle(self.deck)
-		event.peer:send(self:serializeStart(self.deck))
+		peer:send(self:serializeStart(self.deck))
 		self:deal(1)
 		self.enemyTurn = true
-		self:takePlayer2Turn()
 	else
+		self.isHost = true
 		self.deck = self:deserializeStart(self:waitForReceive())
 		self:deal(0)
 	end
@@ -36,7 +38,6 @@ function ClassicOnlineMode:start(host, event)
 	self.board.deck = self.deck
 	self.playerTurnsDone = false
 	self.cursor = BoardCursor:new(self.board, self.player1Hand, {2, 2}, nil)
-	self.gameCount = 0
 	
 	self.player2HandPositions = {}
 	for i=1,4 do
@@ -50,13 +51,12 @@ function ClassicOnlineMode:waitForReceive() --move this check into update
 	while event == nil do
 		event = self.host:service()
 		if event ~= nil and event.type == "receive" then
-			self.peer = event.peer
+			if self.peer == nil then self.peer = event.peer end
 			log(event.data)
 			return event.data
 		end
 	end
 end
-
 
 function ClassicOnlineMode:deal(mod)
 	for i=1,#self.deck-1 do
@@ -113,8 +113,16 @@ function ClassicOnlineMode:keypressed(key)
 				self.board:progress()
 			else
 				self.gameCount = self.gameCount + 1
-				self.playerWinCount = self.playerWinCount + 1
-				self:restart_()
+				if self.board.winner == 1 then
+					self.playerWinCount = self.playerWinCount + 1
+				end
+				local event = self.host:service()
+				if event == nil then
+					self.peer:send("ping")
+					self:start(self.host, self.peer)
+				else
+					self:start(self.host, nil)
+				end
 			end
 		else
 			--pick up card if in hand, put down card if on empty board space
@@ -123,7 +131,7 @@ function ClassicOnlineMode:keypressed(key)
 			elseif self.cursor.grab ~= nil then
 				local tookTurn = false
 				self.lastMove.space = self.cursor.mark
-				self.lastMove.index = self.cursor.index
+				self.lastMove.number = self.cursor.hand[self.cursor.index].number
 				self.cursor, tookTurn = self.cursor:grab()
 				if tookTurn == true then
 					self:endPlayer1Turn()
@@ -132,7 +140,7 @@ function ClassicOnlineMode:keypressed(key)
 				local tookTurn = false
 				self.lastMove.x = self.cursor.coord[1]
 				self.lastMove.y = self.cursor.coord[2]
-				self.lastMove.index = first(self.player1Hand, nil)
+				self.lastMove.number = self.cursor.selectedCard.number
 				self.cursor, tookTurn = self.cursor:place()
 				if tookTurn == true then
 					self:endPlayer1Turn()
@@ -153,24 +161,36 @@ function ClassicOnlineMode:keypressed(key)
 end
 
 function ClassicOnlineMode:endPlayer1Turn()
-	self.peer:send(self:serializeMove(self.lastMove.index, {self.lastMove.x, self.lastMove.y}))
+	local move = self:serializeMove(self.lastMove.number, {self.lastMove.x, self.lastMove.y})
+	self.peer:send(move)
 	floatingCardRates = {math.random()*4.0, math.random()*4.0}
-	self.board:refresh()
-	self:takePlayer2Turn()
+	self:endOfRound()
+	self.enemyTurn = true
 end
 
 function ClassicOnlineMode:update(dt)
-
+	if self.enemyTurn == true then
+		event = self.host:service()
+		if event ~= nil and event.type == "receive" then
+			if self.peer == nil then self.peer = event.peer end
+			self:finishPlayer2Turn(self:deserializeMove(event.data))
+		end
+	end
+	if self.board:isBoardFull() == true then
+		self.enemyTurn = false
+	end
 end
 
-function ClassicOnlineMode:takePlayer2Turn()
-	self.enemyTurn = true
-	local move = self:deserializeMove(self:waitForReceive())
+function ClassicOnlineMode:finishPlayer2Turn(move)
 	self.enemyTurn = false
-	local bool = "false"
-	if move.space == nil then bool = "true" end
-	self.board:setTile(move.space, self.player2Hand[move.index])
-	self.player2Hand[move.index] = nil
+	local index = 0
+	for i=1,4 do
+		if self.player2Hand[i] ~= nil and self.player2Hand[i].number == move.number then
+			index = i
+		end
+	end
+	self.board:setTile(move.space, self.player2Hand[index])
+	self.player2Hand[index] = nil
 	defrag(self.player2Hand, 4)
 	self:endOfRound()
 end
@@ -190,6 +210,9 @@ end
 function ClassicOnlineMode:draw()    
 	drawBoard(self.board, boardOffset)
 	drawCursorAndHand(self.cursor)
+
+	--score
+	love.graphics.print("Won "..self.playerWinCount.."/"..self.gameCount.."games.", 0, 0)
 
 	--AI hand
 	for i=1,4 do
@@ -233,7 +256,6 @@ end
 
 function ClassicOnlineMode:deserializeStart(deck)
 	local deck = self:toBots(deck:split(","))
-
 	return deck
 end
 
@@ -272,15 +294,15 @@ function ClassicOnlineMode:toBot(number)
 	end
 end
 
-function ClassicOnlineMode:serializeMove(index, space)
-	local ret = index..","..space[1]..","..space[2]
+function ClassicOnlineMode:serializeMove(number, space)
+	local ret = number..","..space[1]..","..space[2]
 	return ret
 end
 
 function ClassicOnlineMode:deserializeMove(move)
 	local ret = {}
 	local message = move:split(",")
-	ret.index = tonumber(message[1])
+	ret.number = tonumber(message[1])
 	ret.space = {tonumber(message[2]), tonumber(message[3])}
 	return ret
 end

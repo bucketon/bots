@@ -14,7 +14,7 @@ end
 
 function NetworkMode:host()
   local enet = require "enet"
-  local host = enet.host_create("localhost:6789")
+  local host = enet.host_create("*:6789")
   local connecting = true
   while connecting == true do --move this into update
     local event = host:service(100)
@@ -33,7 +33,7 @@ end
 function NetworkMode:peer()
   local enet = require "enet"
   local host = enet.host_create()
-  local server = host:connect("localhost:6789")
+  local server = host:connect("67.171.2.87:6789")
   local connecting = true
   while connecting == true do --move this into update
     local event = host:service(100)
@@ -41,7 +41,7 @@ function NetworkMode:peer()
       if event.type == "connect" then
         print(event.peer, "connected.")
         pop(currentMode)
-        currentMode[#currentMode]:start(host, event)
+        currentMode[#currentMode]:start(host, event.peer)
         connecting = false
       end
       event = host:service()
