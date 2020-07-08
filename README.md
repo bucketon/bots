@@ -8,6 +8,10 @@ Instructions to run the game:
 
 Version History:
 ----------------
+**0.7.0**
+* Adds online peer to peer multiplayer. The host may need to forward port 6789 to their computer's local IP (https://portforward.com/)
+* Fixed a bug with displaying auras in puzzle mode.
+
 **0.6.0**
 * Added options menu with option to switch to 2x resolution and option to delete save
 * Added 2 new puzzles
