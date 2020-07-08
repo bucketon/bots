@@ -32,6 +32,7 @@ function Puzzle:reset_()
 	self.board.deck = self.deck
 	self.playerTurnsDone = false
 	self.result = 0
+	self.board:refresh()
 end
 
 function Puzzle:keypressed(key)

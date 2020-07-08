@@ -27,11 +27,12 @@ function ClassicOnlineMode:start(host, peer)
 		shuffle(self.deck)
 		peer:send(self:serializeStart(self.deck))
 		self:deal(1)
-		self.enemyTurn = true
+		
 	else
 		self.isHost = true
 		self.deck = self:deserializeStart(self:waitForReceive())
 		self:deal(0)
+		self.enemyTurn = true
 	end
 	
 	
@@ -170,10 +171,17 @@ end
 
 function ClassicOnlineMode:update(dt)
 	if self.enemyTurn == true then
-		event = self.host:service()
-		if event ~= nil and event.type == "receive" then
-			if self.peer == nil then self.peer = event.peer end
-			self:finishPlayer2Turn(self:deserializeMove(event.data))
+		local event = self.host:service()
+		while event ~= nil do
+			if event ~= nil and event.type == "receive" then
+				self:finishPlayer2Turn(self:deserializeMove(event.data))
+			end
+			event = self.host:service()
+		end
+	else
+		if frameCount % 100 == 0 then
+			--call service to keep alive
+			self.host:service()
 		end
 	end
 	if self.board:isBoardFull() == true then
@@ -296,10 +304,12 @@ end
 
 function ClassicOnlineMode:serializeMove(number, space)
 	local ret = number..","..space[1]..","..space[2]
+	log("Send move: "..ret)
 	return ret
 end
 
 function ClassicOnlineMode:deserializeMove(move)
+	log("Receive move: "..move)
 	local ret = {}
 	local message = move:split(",")
 	ret.number = tonumber(message[1])

@@ -48,6 +48,12 @@ function love.keypressed(key, scancode, isrepeat)
 	currentMode[#currentMode]:keypressed(key)
 end
 
+function love.textinput(text)
+	if currentMode[#currentMode].textinput ~= nil then
+		currentMode[#currentMode]:textinput(text)
+	end
+end
+
 function love.update(dt)
 	frameCount = frameCount + 1
 	currentMode[#currentMode]:update(dt)
