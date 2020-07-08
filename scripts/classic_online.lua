@@ -20,19 +20,30 @@ function ClassicOnlineMode:start(host, peer)
 	self.isHost = false
 	if self.gameCount == nil then self.gameCount = 0 end
 	if self.playerWinCount == nil then self.playerWinCount = 0 end
+	local rand = math.random(2)-1
+	local second = rand == 1
 
 	if peer ~= nil then
 		self.peer = peer
 		self:fillDeck()
 		shuffle(self.deck)
-		peer:send(self:serializeStart(self.deck))
+		peer:send(self:serializeStart(self.deck, second))
 		self:deal(1)
-		
+		if second then
+			self.enemyTurn = true
+		else
+			self.enemyTurn = false
+		end
 	else
 		self.isHost = true
-		self.deck = self:deserializeStart(self:waitForReceive())
+		local first = 0
+		self.deck, first = self:deserializeStart(self:waitForReceive())
 		self:deal(0)
-		self.enemyTurn = true
+		if first == true then
+			self.enemyTurn = false
+		else
+			self.enemyTurn = true
+		end
 	end
 	
 	
@@ -241,11 +252,14 @@ function ClassicOnlineMode:draw()
 	end
 end
 
-function ClassicOnlineMode:serializeStart(deck)
+function ClassicOnlineMode:serializeStart(deck, first)
 	local ret = ""
 	for i=1,#deck do
 		ret = ret..deck[i].number..","
 	end
+	local firstString = "0"
+	if first == true then firstString = "1" end
+	ret = ret..firstString
 	return ret
 end
 
@@ -263,8 +277,10 @@ function string:split(pattern)
 end
 
 function ClassicOnlineMode:deserializeStart(deck)
-	local deck = self:toBots(deck:split(","))
-	return deck
+	local list = deck:split(",")
+	local first = pop(list) == "1"
+	local retDeck = self:toBots(list)
+	return retDeck, first
 end
 
 function ClassicOnlineMode:toBots(list)
