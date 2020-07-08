@@ -37,7 +37,12 @@ function ClassicOnlineMode:start(host, peer)
 	else
 		self.isHost = true
 		local first = 0
-		self.deck, first = self:deserializeStart(self:waitForReceive())
+		if self.lastEvent == nil then
+			self.deck, first = self:deserializeStart(self:waitForReceive())
+		else
+			self.peer = self.lastEvent.peer
+			self.deck, first = self:deserializeStart(self.lastEvent.data)
+		end
 		self:deal(0)
 		if first == true then
 			self.enemyTurn = false
@@ -45,18 +50,20 @@ function ClassicOnlineMode:start(host, peer)
 			self.enemyTurn = true
 		end
 	end
-	
-	
+
+
 	self.board.deck = self.deck
 	self.playerTurnsDone = false
 	self.cursor = BoardCursor:new(self.board, self.player1Hand, {2, 2}, nil)
-	
+
 	self.player2HandPositions = {}
 	for i=1,4 do
 		self.player2HandPositions[i] = {boardOffset[1]+(i-1)*50, -50}
-	end
-	
+	end	
 end
+
+--add a start function that setup calls, and that the reset can call passing in the start event or nil if
+--one should be sent. Cache the last event received in update, and pass that in to start if it exists.
 
 function ClassicOnlineMode:waitForReceive() --move this check into update
 	local event = nil
@@ -128,9 +135,7 @@ function ClassicOnlineMode:keypressed(key)
 				if self.board.winner == 1 then
 					self.playerWinCount = self.playerWinCount + 1
 				end
-				local event = self.host:service()
-				if event == nil then
-					self.peer:send("ping")
+				if self.lastEvent == nil then
 					self:start(self.host, self.peer)
 				else
 					self:start(self.host, nil)
@@ -192,7 +197,11 @@ function ClassicOnlineMode:update(dt)
 	else
 		if frameCount % 100 == 0 then
 			--call service to keep alive
-			self.host:service()
+			if self.lastEvent == nil then
+				self.lastEvent = self.host:service()
+			else
+				self.host:service()
+			end
 		end
 	end
 	if self.board:isBoardFull() == true then
