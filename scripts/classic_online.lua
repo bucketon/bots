@@ -3,6 +3,7 @@ ClassicOnlineMode = {}
 function ClassicOnlineMode:setup()
 	push(currentMode, require("scripts/network"))
 	currentMode[#currentMode]:setup()
+	self.lastEvent = {}
 end
 
 function ClassicOnlineMode:start(host, peer)
@@ -15,7 +16,6 @@ function ClassicOnlineMode:start(host, peer)
 	self.board = Gameboard:new()
 	self.neutralBot = nil
 	self.lastMove = {}
-	self.lastEvent = {}
 	self.enemyTurn = false
 	self.peer = nil
 	self.isHost = false
@@ -41,7 +41,7 @@ function ClassicOnlineMode:start(host, peer)
 		if self.lastEvent[1] == nil then
 			self.deck, first = self:deserializeStart(self:waitForReceive())
 		else
-			self.peer = self.lastEvent.peer
+			self.peer = self.lastEvent[1].peer
 			self.deck, first = self:deserializeStart(self.lastEvent[1].data)
 			local size = #self.lastEvent
 			self.lastEvent[1] = nil
@@ -136,7 +136,7 @@ function ClassicOnlineMode:keypressed(key)
 				if self.board.winner == 1 then
 					self.playerWinCount = self.playerWinCount + 1
 				end
-				if pop(self.lastEvent) == nil then
+				if self.lastEvent[#self.lastEvent] == nil then
 					self:start(self.host, self.peer)
 				else
 					self:start(self.host, nil)
