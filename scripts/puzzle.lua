@@ -31,6 +31,9 @@ function Puzzle:reset_()
 	self.cursor = HandCursor:new(self.board, self.player1Hand, 1, nil)
 	self.board.deck = self.deck
 	self.playerTurnsDone = false
+	if saveData.SortHands then
+		table.sort(self.player1Hand, function (left, right) return left.number < right.number end)
+	end
 	self.result = 0
 	self.board:refresh()
 end

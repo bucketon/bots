@@ -55,6 +55,9 @@ function ClassicOnlineMode:start(host, peer)
 		end
 	end
 
+	if saveData.SortHands then
+		table.sort(self.player1Hand, function (left, right) return left.number < right.number end)
+	end
 
 	self.board.deck = self.deck
 	self.playerTurnsDone = false

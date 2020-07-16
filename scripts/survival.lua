@@ -29,6 +29,9 @@ function Survival:setup()
 	self.gameCount = 0
 	self.neutralBot = nil
 	self:deal()
+	if saveData.SortHands then
+		table.sort(self.player1Hand, function (left, right) return left.number < right.number end)
+	end
 	self.board.deck = self.deck
 	self.player2HandPositions = {}
 	for i=1,4 do
@@ -49,6 +52,9 @@ function Survival:restart_()
 	self.cursor = BoardCursor:new(self.board, self.player1Hand, {2, 2}, nil)
 	self.player2TurnTimer = 0
 	self:deal()
+	if saveData.SortHands then
+		table.sort(self.player1Hand, function (left, right) return left.number < right.number end)
+	end
 	self.board.deck = self.deck
 end
 

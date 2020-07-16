@@ -11,6 +11,9 @@ function love.load()
     else
     	love.window.setMode(400, 240)
     end
+    if saveData.SortHands == nil then
+		saveData.SortHands = false
+	end
 	love.graphics.setDefaultFilter("nearest","nearest")
 	require("scripts/manifest")
 	require("scripts/board_renderer")

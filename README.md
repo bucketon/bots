@@ -14,6 +14,7 @@ Version History:
 * Added a scoreboard at the end of games to show how many survivors each player had (I'll add a display for the tiebreaker later)
 * Added an indicator when your opponent is taking their turn in an online game.
 * Fixed a bug where clients could desync in subsequent multiplayer games.
+* Added option to sort player hand.
 
 **0.7.0**
 * Added online peer to peer multiplayer. The host may need to forward port 6789 to their computer's local IP (https://portforward.com/)
