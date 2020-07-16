@@ -4,6 +4,7 @@ function TitleMode:setup()
 	self.title = love.graphics.newImage("assets/title.png")
 	local puzzleList = require('scripts/puzzle_list')
 	self.menu = {
+		{label = "Start",
 			{label = "VS AI",
 				{label = "Classic (High Score: "..calculateClassicScore()..")",
 			 	mode = require('scripts/vsAI')},
@@ -29,7 +30,8 @@ function TitleMode:setup()
 				{label = "Deckbuilder", 
 				mode = require('scripts/deckbuilder')},
 			},
-		   }
+		}
+	}
 	self.menuStack = {}
 	self.menuIndexStack = {}
 	self.menuIndex = 1
@@ -107,9 +109,15 @@ function TitleMode:drawMenu()
 	local menuItemHeight = 18
 	local totalMenuHeight = menuItemHeight*#self.menu + padding*(#self.menu-1)
 	for i=1,#self.menu do
-		local drawable = love.graphics.newText(font, formatMenuString(self.menu[i].label, self.menuIndex == i, self.menu[i].mode ==  nil))
+		local drawable = love.graphics.newText(font, formatMenuString(self.menu[i].label, self.menuIndex == i, 
+			self.menu[i].mode ==  nil))
 		local position = {math.floor(400/2 - drawable:getWidth()/2), 
 		math.floor(240 - (totalMenuHeight + bottomMargin) + (menuItemHeight+padding)*(i-1))}
+		local prevRed, prevGreen, prevBlue = love.graphics.getColor()
+		love.graphics.setColor(0, 0, 0, 1)
+		love.graphics.rectangle("fill", position[1]-padding, position[2]-padding, 
+			drawable:getWidth()+10, drawable:getHeight()+10)
+		love.graphics.setColor(prevRed, prevGreen, prevBlue)
 		love.graphics.draw(drawable, position[1], position[2])
 	end
 end

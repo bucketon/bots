@@ -49,6 +49,7 @@ function NetworkMode:keypressed(key)
       self.menuIndex = pop(self.menuIndexStack)
     else
       pop(currentMode)
+      pop(currentMode)
     end
   end
   if key == "up" then

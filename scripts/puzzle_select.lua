@@ -27,7 +27,6 @@ function PuzzleSelect:keypressed(key)
 	end
 	if key == "x" then
 		pop(currentMode)
-		currentMode[#currentMode]:setup()
 	end
 	if key == "up" then
 		self.menuIndex = math.max(1, self.menuIndex - self.rowLength)
