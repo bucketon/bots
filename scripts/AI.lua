@@ -48,10 +48,12 @@ function AI:calculateTurn(hand, board)
 				local testBoard = deepCopy(board)
 				testBoard:setTile(space, card)--the move we're testing
 				local unusedBotsCopy = deepCopy(unusedBots)
-				local neutralBot = unusedBotsCopy[n]
-				unusedBotsCopy[n] = nil
-				neutralBot.team = 3
-				testBoard:setTile(neutralBotLocation, neutralBot)
+				if not areEqual(neutralBotLocation, {0, 0}) then
+					local neutralBot = unusedBotsCopy[n]
+					unusedBotsCopy[n] = nil
+					neutralBot.team = 3
+					testBoard:setTile(neutralBotLocation, neutralBot)
+				end
 				unusedBotsCopy = defrag(unusedBotsCopy, 10)
 				local emptySpacesCopy = deepCopy(emptySpaces)
 				local handCopyCopy = deepCopy(handCopy)
@@ -66,6 +68,7 @@ function AI:calculateTurn(hand, board)
 					end
 				end
 				testBoard.deck = unusedBotsCopy
+				if #unusedBotsCopy == 0 then error("deck was empty") end
 				--compute score
 				while testBoard.winner == 0 or testBoard.winner == nil do
 					testBoard:progress()

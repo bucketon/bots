@@ -141,6 +141,14 @@ function Puzzle:draw()
 	elseif self.result == 2 then
 		love.graphics.draw(tooBad, 0, 88)
 	end
+	if self.result ~= 0 then
+		local prevRed, prevGreen, prevBlue = love.graphics.getColor()
+		love.graphics.setColor(0, 0, 0, 1)
+		love.graphics.rectangle("fill", 105, 155, 210, 60)
+		love.graphics.setColor(prevRed, prevGreen, prevBlue)
+		love.graphics.print("you had "..self.board.scores[1].." survivors.", 115, 165)
+		love.graphics.print("they had "..self.board.scores[2].." survivors.", 115, 185)
+	end
 end
 
 return Puzzle

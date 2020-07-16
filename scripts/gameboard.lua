@@ -5,6 +5,7 @@ Gameboard = {
 	boardHeight = 3,
 	deathsThisAttack = {},
 	winner = 0,
+	scores = {0, 0, 0},
 	nextAttacker = 0,
 	deck = nil,
 	combatStarted = false
@@ -19,6 +20,7 @@ function Gameboard:new()
     o.board = {{}, {}, {}}
     o.nextAttacker = 0
     o.winner = 0
+    o.scores = {0, 0, 0}
     o.combatStarted = false
     return o
 end
@@ -175,23 +177,22 @@ function Gameboard:refresh()
 end
 
 function Gameboard:declareWinner()
-	local scores = {0, 0, 0}
 	local lowestBots = {10, 10, 10}
 	for x=1,self.boardWidth do
 		for y=1,self.boardHeight do
 			local bot = self:getTile({x, y})
 				if bot ~= nil then
-					scores[bot.team] = scores[bot.team] + bot:score(self)
+					self.scores[bot.team] = self.scores[bot.team] + bot:score(self)
 				if bot.number < lowestBots[bot.team] then lowestBots[bot.team] = bot.number end
 			end
 		end
 	end
 
-	local highest = math.max(scores[1], scores[2], scores[3])
+	local highest = math.max(self.scores[1], self.scores[2], self.scores[3])
 	local tiedPlayers = {}
 
 	for i=1,3 do
-		if highest == scores[i] then
+		if highest == self.scores[i] then
 			tiedPlayers[#tiedPlayers+1] = i 
 		end
 	end
@@ -214,7 +215,8 @@ function Gameboard:declareWinner()
 		log("Since two or more players had "..highest.." survivors, the lowest number survivor wins, so player "
 			..self.winner.." wins with "..lowestLowBot.."!")
 	else
-		log("Since player one had "..scores[1].." survivors, and player two had "..scores[2].." survivors, player "..self.winner.." wins!")
+		log("Since player one had "..self.scores[1].." survivors, and player two had "..
+			self.scores[2].." survivors, player "..self.winner.." wins!")
 	end
 end
 

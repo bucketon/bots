@@ -26,6 +26,8 @@ function TitleMode:setup()
 				mode = require('scripts/sandbox')},
 				{label = "Options", 
 				mode = require('scripts/options')},
+				{label = "Deckbuilder", 
+				mode = require('scripts/deckbuilder')},
 			},
 		   }
 	self.menuStack = {}

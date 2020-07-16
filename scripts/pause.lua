@@ -3,7 +3,7 @@ Pause = {}
 function Pause:setup()
 	self.menu = {
 			{label = "Back to Menu", 
-			 mode = require('scripts/title')},
+			 method = Pause.toTitle},
 
 			{label = "How to Play", 
 			 mode = require('scripts/rules')}
@@ -18,6 +18,8 @@ function Pause:keypressed(key)
 		if self.menu[self.menuIndex].mode ~= nil then
 			push(currentMode, self.menu[self.menuIndex].mode)
 			currentMode[#currentMode]:setup()
+		elseif self.menu[self.menuIndex].method ~= nil then
+			self.menu[self.menuIndex]:method()
 		else
 			push(self.menuStack, self.menu)
 			push(self.menuIndexStack, self.menuIndex)
@@ -38,6 +40,16 @@ function Pause:keypressed(key)
 	end
 	if key == "down" then
 		self.menuIndex = math.min(#self.menu, self.menuIndex + 1)
+	end
+end
+
+function Pause:toTitle()
+	pop(currentMode)
+	if currentMode[#currentMode].onExit ~= nil then
+		currentMode[#currentMode]:onExit()
+	end
+	for i=2,#currentMode do
+		pop(currentMode)
 	end
 end
 

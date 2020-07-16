@@ -2,10 +2,15 @@ NetworkMode = {}
 
 function NetworkMode:setup()
   self.menu = {
-        {label = "Start a Game",
-        method = self.host},
-        {label = "Join a Game",
-        method = self.peer},
+        {label = "Matchmaking",
+        method = self.server},
+
+        {label = "Peer to peer",
+          {label = "Start a Game",
+          method = self.host},
+          {label = "Join a Game",
+          method = self.peer}}
+        
        }
   self.menuStack = {}
   self.menuIndexStack = {}
@@ -19,6 +24,11 @@ end
 
 function NetworkMode:peer()
   push(currentMode, require("scripts/network_join"))
+  currentMode[#currentMode]:setup()
+end
+
+function NetworkMode:server()
+  push(currentMode, require("scripts/network_server"))
   currentMode[#currentMode]:setup()
 end
 

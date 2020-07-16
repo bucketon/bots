@@ -108,16 +108,22 @@ function Sandbox:deal()
 end
 
 function Sandbox:fillDeck() --the classic bots set
-	self.deck[1] = Bots.Arcenbot:new()
-	self.deck[2] = Bots.Recycler:new()
-	self.deck[3] = Bots.Injector:new()
-	self.deck[4] = Bots.Ratchet:new()
-	self.deck[5] = Bots.EMPBot:new()
-	self.deck[6] = Bots.SpyBot:new()
-	self.deck[7] = Bots.Booster:new()
-	self.deck[8] = Bots.LaserCannon:new()
-	self.deck[9] = Bots.Thresher:new()
-	self.deck[10] = Bots.Renegade:new()
+	if saveData.deck == nil then
+		self.deck[1] = Bots.Arcenbot:new()
+		self.deck[2] = Bots.Recycler:new()
+		self.deck[3] = Bots.Injector:new()
+		self.deck[4] = Bots.Ratchet:new()
+		self.deck[5] = Bots.EMPBot:new()
+		self.deck[6] = Bots.SpyBot:new()
+		self.deck[7] = Bots.Booster:new()
+		self.deck[8] = Bots.LaserCannon:new()
+		self.deck[9] = Bots.Thresher:new()
+		self.deck[10] = Bots.Renegade:new()
+	else
+		for i=1,#saveData.deck do
+			self.deck[i] = AllBots[saveData.deck[i]]:new()
+		end
+	end
 end
 
 function Sandbox:endOfRound()
@@ -142,6 +148,12 @@ function Sandbox:draw()
 		elseif self.board.winner == 3 then
 			love.graphics.draw(nbwins, 0, 88)
 		end
+		local prevRed, prevGreen, prevBlue = love.graphics.getColor()
+		love.graphics.setColor(0, 0, 0, 1)
+		love.graphics.rectangle("fill", 105, 155, 210, 60)
+		love.graphics.setColor(prevRed, prevGreen, prevBlue)
+		love.graphics.print("you had "..self.board.scores[1].." survivors.", 115, 165)
+		love.graphics.print("they had "..self.board.scores[2].." survivors.", 115, 185)
 	end
 end
 

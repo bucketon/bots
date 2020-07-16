@@ -225,7 +225,7 @@ Herobot = Bot:new()
 Herobot.name = "Herobot"
 Herobot.image = love.graphics.newImage("assets/recycler.png")
 Herobot.mini = love.graphics.newImage("assets/recycler_mini.png")
-Herobot.number = 2
+Herobot.number = 7
 function Herobot:die_(board, killer)
 	local counts = {0, 0, 0}
 	for x=1,board.boardWidth do
@@ -443,39 +443,39 @@ function Merc:die_(board, killer)
 end
 
 ExtendedBots = {
-	Arcenbot = Arcenbot,
-	Recycler = Recycler,
-	Injector = Injector,
-	Ratchet = Ratchet,
-	EMPBot = EMPBot,
-	SpyBot = SpyBot,
-	Booster = Booster,
-	LaserCannon = LaserCannon,
-	Thresher = Thresher,
-	Renegade = Renegade,
-	AlarmOBot = AlarmOBot,
-	LilOleMe = LilOleMe,
-	Speedbot = Speedbot,
-	BlackJack = BlackJack,
-	FearBot = FearBot,
-	RadiationBot = RadiationBot,
-	DavidDestroyer = DavidDestroyer,
-	Faraday = Faraday,
-	Eater = Eater,
-	Bouncer = Bouncer,
-	TurtleBot = TurtleBot,
-	Pacifist = Pacifist,
-	AutoLadder = AutoLadder,
-	Herobot = Herobot,
-	StraightShooter = StraightShooter,
-	Cultist = Cultist,
-	Elephant = Elephant,
-	Crusher = Crusher,
-	Guardian = Guardian,
-	SteadfastBot = SteadfastBot,
-	GlassCannon = GlassCannon,
-	DynaBot = DynaBot,
-	Merc = Merc,
+	Arcenbot,
+	Recycler,
+	Injector,
+	Ratchet,
+	EMPBot,
+	SpyBot,
+	Booster,
+	LaserCannon,
+	Thresher,
+	Renegade,
+	StraitJacket,
+	LilOleMe,
+	Speedbot,
+	BlackJack,
+	FearBot,
+	RadiationBot,
+	DavidDestroyer,
+	Faraday,
+	Eater,
+	Bouncer,
+	TurtleBot,
+	Pacifist,
+	AutoLadder,
+	Herobot,
+	StraightShooter,
+	Cultist,
+	Elephant,
+	Crusher,
+	Guardian,
+	SteadfastBot,
+	GlassCannon,
+	DynaBot,
+	Merc,
 }
 
-return Bots
+return ExtendedBots
