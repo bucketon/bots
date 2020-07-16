@@ -8,8 +8,15 @@ Instructions to run the game:
 
 Version History:
 ----------------
+**0.8.0**
+* Added a matchmaking server. Just go to Online->Matchmaking and you will be paired with an opponent! No more futzing with port forwarding necessary.
+* Fixed a few different crashes people found this week.
+* Added a scoreboard at the end of games to show how many survivors each player had (I'll add a display for the tiebreaker later)
+* Added an indicator when your opponent is taking their turn in an online game.
+* Fixed a bug where clients could desync in subsequent multiplayer games.
+
 **0.7.0**
-* Adds online peer to peer multiplayer. The host may need to forward port 6789 to their computer's local IP (https://portforward.com/)
+* Added online peer to peer multiplayer. The host may need to forward port 6789 to their computer's local IP (https://portforward.com/)
 * Fixed a bug with displaying auras in puzzle mode.
 
 **0.6.0**
