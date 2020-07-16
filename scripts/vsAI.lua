@@ -16,6 +16,9 @@ function VsAIMode:setup()
 	self.AIWinCount = 0
 	self.neutralBot = nil
 	self:deal()
+	if saveData.SortHands then
+		table.sort(self.player1Hand, function (left, right) return left.number < right.number end)
+	end
 	self.player2HandPositions = {}
 	for i=1,4 do
 		self.player2HandPositions[i] = {boardOffset[1]+(i-1)*50, -50}

@@ -14,9 +14,18 @@ function OptionsMode:refresh()
 	else
 		DoubleResolutionValue = "False"
 	end
+
+	local SortHandsValue = ""
+	if saveData.SortHands ~= nil and saveData.SortHands == true then
+		SortHandsValue = "True"
+	else
+		SortHandsValue = "False"
+	end
 	self.menu = {
 				{label = "2x Resolution: "..DoubleResolutionValue,
 			 	method = self.toggle2xResolution},
+			 	{label = "Sort Hands: "..SortHandsValue,
+			 	method = self.toggleSortHands},
 			 	{label = "Clear Save Data",
 			 		{label = "Are you sure? Z:yes, X:no",
 			 		method = self.clearSave},
@@ -32,6 +41,12 @@ function OptionsMode:toggle2xResolution()
     else
     	love.window.setMode(400, 240)
     end
+    self:refresh()
+end
+
+function OptionsMode:toggleSortHands()
+	saveData.SortHands = not saveData.SortHands
+	save(saveData)
     self:refresh()
 end
 
