@@ -15,6 +15,7 @@ function ClassicOnlineMode:start(host, peer)
 	self.board = Gameboard:new()
 	self.neutralBot = nil
 	self.lastMove = {}
+	self.lastEvent = {}
 	self.enemyTurn = false
 	self.peer = nil
 	self.isHost = false
@@ -37,11 +38,14 @@ function ClassicOnlineMode:start(host, peer)
 	else
 		self.isHost = true
 		local first = 0
-		if self.lastEvent == nil then
+		if self.lastEvent[1] == nil then
 			self.deck, first = self:deserializeStart(self:waitForReceive())
 		else
 			self.peer = self.lastEvent.peer
-			self.deck, first = self:deserializeStart(self.lastEvent.data)
+			self.deck, first = self:deserializeStart(self.lastEvent[1].data)
+			local size = #self.lastEvent
+			self.lastEvent[1] = nil
+			defrag(self.lastEvent, size)
 		end
 		self:deal(0)
 		if first == true then
@@ -62,10 +66,7 @@ function ClassicOnlineMode:start(host, peer)
 	end	
 end
 
---add a start function that setup calls, and that the reset can call passing in the start event or nil if
---one should be sent. Cache the last event received in update, and pass that in to start if it exists.
-
-function ClassicOnlineMode:waitForReceive() --move this check into update
+function ClassicOnlineMode:waitForReceive()
 	local event = nil
 	while event == nil do
 		event = self.host:service()
@@ -135,7 +136,7 @@ function ClassicOnlineMode:keypressed(key)
 				if self.board.winner == 1 then
 					self.playerWinCount = self.playerWinCount + 1
 				end
-				if self.lastEvent == nil then
+				if pop(self.lastEvent) == nil then
 					self:start(self.host, self.peer)
 				else
 					self:start(self.host, nil)
@@ -143,8 +144,9 @@ function ClassicOnlineMode:keypressed(key)
 			end
 		else
 			--pick up card if in hand, put down card if on empty board space
-			if self.cursor.bookmark ~= nil and self.cursor.board:getTile(self.cursor.coord) == nil and self.cursor.selectedCard == nil then
-				self.cursor = self.cursor:bookmark()
+			if self.cursor.bookmark ~= nil and self.cursor.board:getTile(self.cursor.coord) == nil and 
+				self.cursor.selectedCard == nil then
+					self.cursor = self.cursor:bookmark()
 			elseif self.cursor.grab ~= nil then
 				local tookTurn = false
 				self.lastMove.space = self.cursor.mark
@@ -187,20 +189,25 @@ end
 
 function ClassicOnlineMode:update(dt)
 	if self.enemyTurn == true then
-		local event = self.host:service()
+		local event = pop(self.lastEvent)
+		if event == nil then
+			event = self.host:service()
+		end
 		while event ~= nil do
 			if event ~= nil and event.type == "receive" then
 				self:finishPlayer2Turn(self:deserializeMove(event.data))
 			end
-			event = self.host:service()
+			event = pop(self.lastEvent)
+			if event == nil then
+				event = self.host:service()
+			end
 		end
 	else
 		if frameCount % 100 == 0 then
 			--call service to keep alive
-			if self.lastEvent == nil then
-				self.lastEvent = self.host:service()
-			else
-				self.host:service()
+			local event = self.host:service()
+			if event ~= nil then
+				push(self.lastEvent, event)
 			end
 		end
 	end
@@ -238,6 +245,11 @@ end
 function ClassicOnlineMode:draw()    
 	drawBoard(self.board, boardOffset)
 	drawCursorAndHand(self.cursor)
+
+	--opponent turn indicator
+	if self.enemyTurn == true then
+		love.graphics.draw(busyIndicator, 400/2 - busyIndicator:getWidth()/2, 240/2 - busyIndicator:getHeight()/2)
+	end
 
 	--score
 	love.graphics.print("Won "..self.playerWinCount.."/"..self.gameCount.."games.", 0, 0)
