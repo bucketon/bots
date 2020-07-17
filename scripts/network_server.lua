@@ -1,29 +1,36 @@
-NetworkJoin = {}
+NetworkServer = {}
 
-function NetworkJoin:setup()
+function NetworkServer:setup()
   local enet = require "enet"
   self.host = enet.host_create()
   self.host:connect("130.211.205.231:6789")
   self.connecting = true
   self.blink = 0
-  self.error = nil
+  self.error = ""
+  self.waitingForPlayer = false
+  self.serverWaitTime = 0
 end
 
-function NetworkJoin:keypressed(key)
+function NetworkServer:keypressed(key)
   if self.connecting and key == "x" then
     pop(currentMode)
   end
 end
 
-function NetworkJoin:update(dt)
-  if frameCount % 25 == 0 then
+function NetworkServer:update(dt)
+  if self.waitingForPlayer == false and self.connecting == true then
+    self.serverWaitTime = self.serverWaitTime + dt
+    if self.serverWaitTime > 10 then
+      self.error = "Server is not responding."
+    end
+  end
+  if frameCount % 5 == 0 then
     self.blink = self.blink + 1
     if self.blink > 3 then self.blink = 0 end
   end
 
   if self.connecting == true then
     local status = false
-    self.error = ""
     status, event = pcall(self.host.service, self.host, 100)
     if status == false then 
       self.connecting = false
@@ -32,6 +39,7 @@ function NetworkJoin:update(dt)
     while event do
       if event.type == "connect" then
         print(event.peer, "connected.")
+        self.waitingForPlayer = true
       end
       if event.type == "receive" then
         print(event.peer, "sent data.")
@@ -51,12 +59,23 @@ function NetworkJoin:update(dt)
 
 end
 
-function NetworkJoin:draw()
+function NetworkServer:draw()
   local ellipses = ""
-  for i=0,self.blink do
-    ellipses = ellipses.."."
+  if self.error == "" then
+    for i=0,self.blink do
+      ellipses = ellipses.."."
+    end
   end
-  love.graphics.print("Connecting to server"..ellipses.."\nX: Go back", 0, 30)
+  if self.waitingForPlayer == false then
+    if self.error == "" then
+      love.graphics.print("Connecting to server"..ellipses.."\nX: Go back", 0, 30)
+    else
+      love.graphics.print("Could not connect to server.\nX: Go back", 0, 30)
+    end
+  else
+    love.graphics.print("Waiting for player"..ellipses.."\nX: Go back", 0, 30)
+  end
+  love.graphics.print(self.error, 0, 100)
 end
 
-return NetworkJoin
+return NetworkServer
