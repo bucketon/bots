@@ -85,6 +85,7 @@ function Gameboard:progress()--solve one turn of combat
 		currentbot = self.currentbot,
 		winner = self.winner,
 		combatStep = self.combatStep,
+		nextAttacker = self.nextAttacker
 	}
 	)
 	self.combatStep = self.combatStep + 1
@@ -167,6 +168,7 @@ function Gameboard:regress()--go backwards one turn of combat
 	self.winner = previousBoard.winner
 	self.deck = previousBoard.deck
 	self.combatStep = previousBoard.combatStep
+	self.nextAttacker = previousBoard.nextAttacker
 end
 
 function Gameboard:refresh()
@@ -179,7 +181,7 @@ function Gameboard:refresh()
 				self.board[x][y].EMP = false
 				self.board[x][y].paralysis = false
 				self.board[x][y].animation = false
-				botList[#botList+1] = self.board[x][y]
+				push(botList, self.board[x][y])
 			end 
 		end
 	end
@@ -192,10 +194,10 @@ function Gameboard:refresh()
 		end
 	end
 
-	if #botList > 0 and playerTurnsDone == true then--todo: is this still used?
+	if #botList > 0 and self.combatStep > 0 then
 		for i=1,#botList do
 			if botList[i].number >= self.currentbot then
-				nextAttacker = botList[i].number
+				self.nextAttacker = botList[i].number
 				break
 			end
 		end

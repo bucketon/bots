@@ -16,10 +16,11 @@ function drawBoard(board, coord)
 			love.graphics.draw(space, boardTilePositions[x][y][1]-2+position[1], boardTilePositions[x][y][2]-2+position[2])
 			local thisBot = board:getTile({x, y})
 			if thisBot ~= nil then	
-				drawMiniCard(thisBot, {boardTilePositions[x][y][1]+position[1],boardTilePositions[x][y][2]+position[2]})
+				drawMiniCard(thisBot, {boardTilePositions[x][y][1]+position[1], boardTilePositions[x][y][2]+position[2]})
 				if thisBot.number == board.nextAttacker and board.combatStep > 0 then
-				love.graphics.draw(attackIndicator, 0, 0)
-			end
+					love.graphics.draw(attackIndicator, 
+						boardTilePositions[x][y][1]+position[1], boardTilePositions[x][y][2]+position[2])
+				end
 			end
 		end
 	end
