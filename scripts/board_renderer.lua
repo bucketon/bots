@@ -20,6 +20,16 @@ function drawBoard(board, coord)
 				if thisBot.number == board.nextAttacker and board.combatStep > 0 then
 					love.graphics.draw(attackIndicator, 
 						boardTilePositions[x][y][1]+position[1], boardTilePositions[x][y][2]+position[2])
+					--need better attack infra to accurrately represent things like renegade etc
+					--local neighbors = thisBot:getNeighbors(board, {x, y})
+					--for i=1,neighbors.n do
+					--	if neighbors[i] ~= nil and neighbors[i].team ~= thisBot.team and frameCount%30 - 15 > 0 then
+					--		local enemyPosition = board:getBotPosition(neighbors[i].number)
+					--		love.graphics.draw(attackMarker, 
+					--			boardTilePositions[enemyPosition[1]][enemyPosition[2]][1]+position[1], 
+					--			boardTilePositions[enemyPosition[1]][enemyPosition[2]][2]+position[2])
+					--	end
+					--end
 				end
 			end
 		end
