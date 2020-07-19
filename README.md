@@ -11,7 +11,7 @@ Version History:
 **0.8.0**
 * Added a matchmaking server. Just go to Online->Matchmaking and you will be paired with an opponent! No more futzing with port forwarding necessary.
 * Fixed a few different crashes people found this week.
-* Added a scoreboard at the end of games to show how many survivors each player had (I'll add a display for the tiebreaker later)
+* Added a scoreboard at the end of games to show how many survivors each player had and the tiebreaker.
 * Added an indicator when your opponent is taking their turn in an online game.
 * Fixed a bug where clients could desync in subsequent multiplayer games.
 * Added option to sort player hand.

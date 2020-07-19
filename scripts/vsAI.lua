@@ -198,18 +198,21 @@ function VsAIMode:draw()
 	--victory
 	if self.board.winner ~= 0 then
 		if self.board.winner == 1 then
-			love.graphics.draw(player1wins, 0, 88)
+			love.graphics.draw(player1wins, 0, 70)
 		elseif self.board.winner == 2 then
-			love.graphics.draw(player2wins, 0, 88)
+			love.graphics.draw(player2wins, 0, 70)
 		elseif self.board.winner == 3 then
-			love.graphics.draw(nbwins, 0, 88)
+			love.graphics.draw(nbwins, 0, 70)
 		end
 		local prevRed, prevGreen, prevBlue = love.graphics.getColor()
 		love.graphics.setColor(0, 0, 0, 1)
-		love.graphics.rectangle("fill", 105, 155, 210, 60)
+		love.graphics.rectangle("fill", 55, 135, 274, 85)
 		love.graphics.setColor(prevRed, prevGreen, prevBlue)
-		love.graphics.print("you had "..self.board.scores[1].." survivors.", 115, 165)
-		love.graphics.print("they had "..self.board.scores[2].." survivors.", 115, 185)
+		love.graphics.rectangle("line", 55, 135, 274, 85)
+		love.graphics.print("you had "..self.board.scores[1].." survivors.", 60, 156)
+		love.graphics.print("they had "..self.board.scores[2].." survivors.", 60, 176)
+		love.graphics.print("Lowbot", 260, 135)
+		drawMiniCard(self.board:getTile(self.board:getBotPosition(self.board.lowestLowBot)), {262, 153})
 	end
 end
 
