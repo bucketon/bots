@@ -65,3 +65,17 @@ checkmark = love.graphics.newImage("assets/checkmark.png")
 checkmarkSmall = love.graphics.newImage("assets/checkmarkSmall.png")
 puzzleCursor = love.graphics.newImage("assets/puzzlecursor.png")
 busyIndicator = love.graphics.newImage("assets/busy.png")
+boostParticle = love.graphics.newImage("assets/boost_particle.png")
+speedNumbers = {
+	love.graphics.newImage("assets/speed1.png"),
+	love.graphics.newImage("assets/speed2.png"),
+	love.graphics.newImage("assets/speed3.png"),
+	love.graphics.newImage("assets/speed4.png"),
+	love.graphics.newImage("assets/speed5.png"),
+	love.graphics.newImage("assets/speed6.png"),
+	love.graphics.newImage("assets/speed7.png"),
+	love.graphics.newImage("assets/speed8.png"),
+	love.graphics.newImage("assets/speed9.png"),
+	love.graphics.newImage("assets/speed10.png")
+}
+numberCursor = love.graphics.newImage("assets/numbercursor.png")

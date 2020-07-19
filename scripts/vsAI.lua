@@ -126,6 +126,8 @@ function VsAIMode:keypressed(key)
 		--put card back in hand if card picked up
 		if self.cursor.replace ~= nil and self.cursor.selectedCard ~= nil then
 			self.cursor = self.cursor:replace()
+		elseif self.board.combatStep > 1 then
+			self.board:regress()
 		else
 			push(currentMode, PauseMode)
 			currentMode[#currentMode]:setup()
@@ -166,7 +168,7 @@ function VsAIMode:takePlayer2Turn()
 	self.board:setTile(move.space, self.player2Hand[move.index])
 	local handLength = #self.player2Hand
 	self.player2Hand[move.index] = nil
-	defrag(self.player2Hand, handLength)
+	self.player2Hand = defrag(self.player2Hand, handLength)
 	self:endOfRound()
 end
 

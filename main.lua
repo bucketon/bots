@@ -14,6 +14,9 @@ function love.load()
     if saveData.SortHands == nil then
 		saveData.SortHands = false
 	end
+	if saveData.ShowSpeed == nil then
+		saveData.ShowSpeed = false
+	end
 	love.graphics.setDefaultFilter("nearest","nearest")
 	require("scripts/manifest")
 	require("scripts/board_renderer")
@@ -59,6 +62,27 @@ end
 
 function love.update(dt)
 	frameCount = frameCount + 1
+
+	--test
+	local boostsSize = 15
+	if boosts == nil then
+		boosts = {}
+	end
+	if frameCount%2 == 0 then
+		if #boosts < boostsSize then
+			push(boosts, {math.random(64), math.random(64), 15})
+		end
+		for i=1,#boosts do
+			boosts[i][2] = boosts[i][2] - 1
+			boosts[i][3] = boosts[i][3] - 1
+			if boosts[i][3] < 0 then
+				boosts[i] = nil
+			end
+		end
+		boosts = defrag(boosts, boostsSize)
+	end
+	--end test
+
 	currentMode[#currentMode]:update(dt)
 end
 

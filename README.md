@@ -15,6 +15,8 @@ Version History:
 * Added an indicator when your opponent is taking their turn in an online game.
 * Fixed a bug where clients could desync in subsequent multiplayer games.
 * Added option to sort player hand.
+* improved visual feedback when a bot's strength is different from its number. (There is also now a setting to always show a bot's number separately from its strength)
+* Added ability to press X to rewind through combat.
 
 **0.7.0**
 * Added online peer to peer multiplayer. The host may need to forward port 6789 to their computer's local IP (https://portforward.com/)

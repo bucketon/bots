@@ -8,7 +8,9 @@ Gameboard = {
 	scores = {0, 0, 0},
 	nextAttacker = 0,
 	deck = nil,
-	combatStarted = false
+	combatStep = 0,
+	lowestLowBot = 10,
+	combatFrames = {}
 }
 
 function Gameboard:new()
@@ -21,7 +23,9 @@ function Gameboard:new()
     o.nextAttacker = 0
     o.winner = 0
     o.scores = {0, 0, 0}
-    o.combatStarted = false
+    o.lowestLowBot = 10
+    o.combatStep = 0
+    o.combatFrames = {}
     return o
 end
 
@@ -65,12 +69,25 @@ function Gameboard:isBoardFull()
 			if self.board[x][y] == nil then return false end
 		end
 	end
-	self.combatStarted = true
+	self:startCombat()
 	return true
 end
 
-function Gameboard:progress()--solve one turn of combat
+function Gameboard:startCombat()
+	self.combatStep = 1
+end
 
+function Gameboard:progress()--solve one turn of combat
+	push(self.combatFrames, 
+	{
+		board = deepCopy(self.board),
+		deck = deepCopy(self.deck),
+		currentbot = self.currentbot,
+		winner = self.winner,
+		combatStep = self.combatStep,
+	}
+	)
+	self.combatStep = self.combatStep + 1
 	log("TURN START: Starting a new turn for bot number "..self.currentbot..".")
 
 	local recall = false
@@ -143,6 +160,15 @@ function Gameboard:progress()--solve one turn of combat
 	self:progress()
 end
 
+function Gameboard:regress()--go backwards one turn of combat
+	local previousBoard = pop(self.combatFrames)
+	self.board = previousBoard.board
+	self.currentbot = previousBoard.currentbot
+	self.winner = previousBoard.winner
+	self.deck = previousBoard.deck
+	self.combatStep = previousBoard.combatStep
+end
+
 function Gameboard:refresh()
 	log("Clearing all buffs and debuffs.")
 	local botList = {}
@@ -166,7 +192,7 @@ function Gameboard:refresh()
 		end
 	end
 
-	if #botList > 0 and playerTurnsDone == true then
+	if #botList > 0 and playerTurnsDone == true then--todo: is this still used?
 		for i=1,#botList do
 			if botList[i].number >= self.currentbot then
 				nextAttacker = botList[i].number
@@ -197,10 +223,10 @@ function Gameboard:declareWinner()
 		end
 	end
 
-	local lowestLowBot = 10
+	self.lowestLowBot = 10
 	for i=1,#tiedPlayers do
-		if lowestBots[tiedPlayers[i]] < lowestLowBot then
-			lowestLowBot = lowestBots[tiedPlayers[i]]
+		if lowestBots[tiedPlayers[i]] < self.lowestLowBot then
+			self.lowestLowBot = lowestBots[tiedPlayers[i]]
 			self.winner = tiedPlayers[i]
 		end
 	end
@@ -213,7 +239,7 @@ function Gameboard:declareWinner()
 		log("The neutral bot wins with "..highest.." survivors!")
 	elseif #tiedPlayers > 1 then
 		log("Since two or more players had "..highest.." survivors, the lowest number survivor wins, so player "
-			..self.winner.." wins with "..lowestLowBot.."!")
+			..self.winner.." wins with "..self.lowestLowBot.."!")
 	else
 		log("Since player one had "..self.scores[1].." survivors, and player two had "..
 			self.scores[2].." survivors, player "..self.winner.." wins!")

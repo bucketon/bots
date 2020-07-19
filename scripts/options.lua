@@ -21,11 +21,21 @@ function OptionsMode:refresh()
 	else
 		SortHandsValue = "False"
 	end
+
+	local ShowSpeedValue = ""
+	if saveData.ShowSpeed ~= nil and saveData.ShowSpeed == true then
+		ShowSpeedValue = "True"
+	else
+		ShowSpeedValue = "False"
+	end
+
 	self.menu = {
 				{label = "2x Resolution: "..DoubleResolutionValue,
 			 	method = self.toggle2xResolution},
 			 	{label = "Sort Hands: "..SortHandsValue,
 			 	method = self.toggleSortHands},
+			 	{label = "Always show speed: "..ShowSpeedValue,
+			 	method = self.toggleShowSpeed},
 			 	{label = "Clear Save Data",
 			 		{label = "Are you sure? Z:yes, X:no",
 			 		method = self.clearSave},
@@ -46,6 +56,12 @@ end
 
 function OptionsMode:toggleSortHands()
 	saveData.SortHands = not saveData.SortHands
+	save(saveData)
+    self:refresh()
+end
+
+function OptionsMode:toggleShowSpeed()
+	saveData.ShowSpeed = not saveData.ShowSpeed
 	save(saveData)
     self:refresh()
 end

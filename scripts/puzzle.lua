@@ -96,6 +96,8 @@ function Puzzle:keypressed(key)
 			--put card back in hand if card picked up
 			if self.cursor.replace ~= nil and self.cursor.selectedCard ~= nil then
 				self.cursor = self.cursor:replace()
+			elseif self.board.combatStep > 1 then
+				self.board:regress()
 			else
 				push(currentMode, PauseMode)
 				currentMode[#currentMode]:setup()

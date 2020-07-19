@@ -42,7 +42,7 @@ function defrag(list, length)
 	local ret = {}
 	for i=1,length do
 		if list[i] ~= nil then
-			ret[#ret+1] = list[i]
+			push(ret, list[i])
 		end
 	end
 	return ret

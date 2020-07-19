@@ -17,7 +17,7 @@ function drawBoard(board, coord)
 			local thisBot = board:getTile({x, y})
 			if thisBot ~= nil then	
 				drawMiniCard(thisBot, {boardTilePositions[x][y][1]+position[1],boardTilePositions[x][y][2]+position[2]})
-				if thisBot.number == board.nextAttacker and board.combatStarted == true then
+				if thisBot.number == board.nextAttacker and board.combatStep > 0 then
 				love.graphics.draw(attackIndicator, 0, 0)
 			end
 			end
@@ -26,7 +26,7 @@ function drawBoard(board, coord)
 
 	--thermometer
 	love.graphics.draw(thermometer, 208+position[1], position[2]-16)
-	if board.combatStarted then
+	if board.combatStep > 0 then
 		for i=1,board.currentbot do
 			if i <= 10 then
 				if i > 1 then
@@ -56,7 +56,11 @@ function drawMiniCard(bot, position)
 				love.graphics.draw(minicard, 0, 0)
 			end
 			love.graphics.draw(bot.mini, 0, 0)
-			love.graphics.draw(arrow, arrow:getWidth()/2, arrow:getHeight()/2, angle, 1, 1, arrow:getWidth()/2, arrow:getHeight()/2)
+			love.graphics.draw(arrow, arrow:getWidth()/2, arrow:getHeight()/2, angle, 1, 1, 
+				arrow:getWidth()/2, arrow:getHeight()/2)
+			if saveData.ShowSpeed == true or bot.number ~= bot:getTotalStrength() then
+				love.graphics.draw(speedNumbers[bot.number], 46, 4)
+			end
 			local totalStrength = bot:getTotalStrength()
 			love.graphics.draw(miniNumbers[totalStrength], 4, 4)
 			if bot.EMP == true then
@@ -64,6 +68,11 @@ function drawMiniCard(bot, position)
 			end
 			if bot.number < bot:getTotalStrength() then
 				love.graphics.draw(boostMiniIndicator, 0, 0)
+				for i=1,#boosts do
+					if boosts[i][3] > 5 or boosts[i][3] % 2 == 0 then
+						love.graphics.draw(boostParticle, boosts[i][1], boosts[i][2])
+					end
+				end
 			end
 		end)
 		if saveData.DoubleResolution == true then
@@ -80,7 +89,7 @@ function drawCursorAndHand(cursor)
 	--draw instructions
 	local currentInstructions = 1
 	if cursor.selectedCard ~= nil then currentInstructions = 2 end
-	if cursor.board.combatStarted == true then currentInstructions = 3 end
+	if cursor.board.combatStep > 0 then currentInstructions = 3 end
 	love.graphics.draw(instructions[currentInstructions], 0, 224)
 end
 
@@ -127,8 +136,13 @@ function drawCursor(cursor)
 			love.graphics.draw(spaceCursor, boardTilePositions[cursor.coord[1]][cursor.coord[2]][1], 
 				boardTilePositions[cursor.coord[1]][cursor.coord[2]][2])
 		else
-			love.graphics.draw(cardCursor, boardTilePositions[cursor.coord[1]][cursor.coord[2]][1], 
-				boardTilePositions[cursor.coord[1]][cursor.coord[2]][2])
+			if saveData.ShowSpeed == true or cursorCard.number ~= cursorCard:getTotalStrength() then
+				love.graphics.draw(numberCursor, boardTilePositions[cursor.coord[1]][cursor.coord[2]][1], 
+					boardTilePositions[cursor.coord[1]][cursor.coord[2]][2])
+			else
+				love.graphics.draw(cardCursor, boardTilePositions[cursor.coord[1]][cursor.coord[2]][1], 
+					boardTilePositions[cursor.coord[1]][cursor.coord[2]][2])
+			end
 		end
 	end
 

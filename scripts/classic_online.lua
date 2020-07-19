@@ -175,6 +175,8 @@ function ClassicOnlineMode:keypressed(key)
 		--put card back in hand if card picked up
 		if self.cursor.replace ~= nil and self.cursor.selectedCard ~= nil then
 			self.cursor = self.cursor:replace()
+		elseif self.board.combatStep > 1 then
+			self.board:regress()
 		else
 			push(currentMode, PauseMode)
 			currentMode[#currentMode]:setup()
@@ -229,7 +231,7 @@ function ClassicOnlineMode:finishPlayer2Turn(move)
 	end
 	self.board:setTile(move.space, self.player2Hand[index])
 	self.player2Hand[index] = nil
-	defrag(self.player2Hand, 4)
+	self.player2Hand = defrag(self.player2Hand, 4)
 	self:endOfRound()
 end
 
