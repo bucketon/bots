@@ -100,6 +100,23 @@ Puzzle06 = {
 	deck = {Recycler:new()}
 }
 
+Puzzle07 = {
+	board = {
+		{bot = Injector:new(), 		coord = {1, 1}, team = 2},
+		{bot = Renegade:new(), 		coord = {2, 1}, team = 2},
+		{bot = Thresher:new(), 		coord = {3, 1}, team = 2},
+		{bot = Recycler:new(), 		coord = {1, 2}, team = 3},
+		{bot = EMPBot:new(), 		coord = {2, 2}, team = 3},
+		{bot = SpyBot:new(), 		coord = {3, 2}, team = 3}
+	},
+	hand = {
+		{bot = Ratchet:new(), team = 1},
+		{bot = Booster:new(), team = 1},
+		{bot = LaserCannon:new(), team = 1}
+	},
+	deck = {Arcenbot:new()}
+}
+
 PuzzleList = {
 	Puzzle01,
 	Puzzle02,
@@ -107,6 +124,7 @@ PuzzleList = {
 	Puzzle04,
 	Puzzle05,
 	Puzzle06,
+	Puzzle07,
 }
 
 return PuzzleList
