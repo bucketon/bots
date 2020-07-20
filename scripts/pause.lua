@@ -2,7 +2,10 @@ Pause = {}
 
 function Pause:setup()
 	self.menu = {
-			{label = "Back to Menu", 
+			{label = "Return to Game", 
+			 method = Pause.backToGame},
+
+			{label = "Exit to Title", 
 			 method = Pause.toTitle},
 
 			{label = "How to Play", 
@@ -32,7 +35,7 @@ function Pause:keypressed(key)
 			self.menu = pop(self.menuStack)
 			self.menuIndex = pop(self.menuIndexStack)
 		else
-			pop(currentMode)
+			self:backToGame()
 		end
 	end
 	if key == "up" then
@@ -41,6 +44,10 @@ function Pause:keypressed(key)
 	if key == "down" then
 		self.menuIndex = math.min(#self.menu, self.menuIndex + 1)
 	end
+end
+
+function Pause:backToGame()
+	pop(currentMode)
 end
 
 function Pause:toTitle()
@@ -62,6 +69,7 @@ function Pause:draw()
 end
 
 function Pause:drawMenu()
+	love.graphics.print("Menu\nX: Go Back", 0, 0)
 	local padding = 5
 	local bottomMargin = 20
 	local menuItemHeight = 18
