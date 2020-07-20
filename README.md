@@ -8,6 +8,9 @@ Instructions to run the game:
 
 Version History:
 ----------------
+**0.9.0**
+* Made pause menu less confusing, harder to accidentally leave games
+
 **0.8.0**
 * Added a matchmaking server. Just go to Online->Matchmaking and you will be paired with an opponent! No more futzing with port forwarding necessary.
 * Fixed a few different crashes people found this week.
