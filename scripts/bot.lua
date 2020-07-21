@@ -6,7 +6,7 @@ Bot = {
 	tempMods = 0, 
 	permMods = 0, 
 	EMP = false,
-	Paralyzed = false,
+	paralyzed = false,
 	image = nil,
 	mini = nil,
 	facedown = false,
@@ -19,7 +19,7 @@ function Bot:new ()
       return self[key]
     end
     o.EMP = false
-    o.Paralyzed = false
+    o.paralyzed = false
     return o
 end
 
@@ -73,7 +73,7 @@ function Bot:preAttack_(board)
 end
 
 function Bot:attack(board, other)
-	if self.Paralyzed == false then
+	if self.paralyzed == false then
 		if self.EMP == false then
 			self:attack_(board, other)
 		else

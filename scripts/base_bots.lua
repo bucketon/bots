@@ -1,5 +1,6 @@
 Arcenbot = Bot:new()
 Arcenbot.name = "Arcenbot"
+Arcenbot.text = "Is worth one additional survivor."
 Arcenbot.image = love.graphics.newImage("assets/arcenbot.png")
 Arcenbot.mini = love.graphics.newImage("assets/arcenbot_mini.png")
 Arcenbot.number = 1
@@ -10,6 +11,7 @@ end
 
 Recycler = Bot:new()
 Recycler.name = "Recycler"
+Recycler.text = "After it dies, replace it with the extra bot."
 Recycler.image = love.graphics.newImage("assets/recycler.png")
 Recycler.mini = love.graphics.newImage("assets/recycler_mini.png")
 Recycler.number = 2
@@ -23,6 +25,7 @@ end
 
 Injector = Bot:new()
 Injector.name = "Injector"
+Injector.text = "Bots that would be killed by it join its team."
 Injector.image = love.graphics.newImage("assets/injector.png")
 Injector.mini = love.graphics.newImage("assets/injector_mini.png")
 Injector.number = 3
@@ -36,6 +39,7 @@ end
 
 Ratchet = Bot:new()
 Ratchet.name = "Ratchet"
+Ratchet.text = "If any bots died from its attack +2, attack again."
 Ratchet.image = love.graphics.newImage("assets/ratchet.png")
 Ratchet.mini = love.graphics.newImage("assets/ratchet_mini.png")
 Ratchet.number = 4
@@ -51,6 +55,7 @@ end
 
 EMPBot = Bot:new()
 EMPBot.name = "EMP Bot"
+EMPBot.text = "Adjacent bots lose their ability text."
 EMPBot.image = love.graphics.newImage("assets/empbot.png")
 EMPBot.mini = love.graphics.newImage("assets/empbot_mini.png")
 EMPBot.number = 5
@@ -68,6 +73,7 @@ end
 
 SpyBot = Bot:new()
 SpyBot.name = "SpyBot"
+SpyBot.text = "Kills larger or equal bots, but not smaller bots."
 SpyBot.image = love.graphics.newImage("assets/spybot.png")
 SpyBot.mini = love.graphics.newImage("assets/spybot_mini.png")
 SpyBot.number = 6
@@ -81,6 +87,7 @@ end
 
 Booster = Bot:new()
 Booster.name = "Booster"
+Booster.text = "Adjacent bots get +1 strength."
 Booster.image = love.graphics.newImage("assets/booster.png")
 Booster.mini = love.graphics.newImage("assets/booster_mini.png")
 Booster.number = 7
@@ -98,6 +105,7 @@ end
 
 LaserCannon = Bot:new()
 LaserCannon.name = "Laser Cannon"
+LaserCannon.text = "Before it attacks kill the biggest adjacent bot."
 LaserCannon.image = love.graphics.newImage("assets/lasercannon.png")
 LaserCannon.mini = love.graphics.newImage("assets/lasercannon_mini.png")
 LaserCannon.number = 8
@@ -126,6 +134,7 @@ end
 
 Thresher = Bot:new()
 Thresher.name = "Thresher"
+Thresher.text = "Only attacks diagonally"
 Thresher.image = love.graphics.newImage("assets/thresher.png")
 Thresher.mini = love.graphics.newImage("assets/thresher_mini.png")
 Thresher.number = 9
@@ -142,6 +151,7 @@ end
 
 Renegade = Bot:new()
 Renegade.name = "Renegade"
+Renegade.text = "Attacks both friends and enemies."
 Renegade.image = love.graphics.newImage("assets/renegade.png")
 Renegade.mini = love.graphics.newImage("assets/renegade_mini.png")
 Renegade.number = 10

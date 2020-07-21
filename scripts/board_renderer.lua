@@ -120,23 +120,16 @@ function drawCursor(cursor)
 	if(selectedBot ~= nil and selectedBot.facedown == true) then
 		love.graphics.draw(neutralBotCard, 0, 0)
 	elseif cursor.selectedCard ~= nil then
-		love.graphics.draw(cursor.selectedCard.image, 0, 0)
+		drawBigCard(cursor.selectedCard)
 	elseif cursor.index ~= nil then
 		local hoveredBot = cursor.hand[cursor.index]
 		if hoveredBot ~= nil then
-			love.graphics.draw(hoveredBot.image, 0, 0)
+			drawBigCard(hoveredBot)
 		end
 	elseif cursor.coord ~= nil then
 		local hoveredBot = cursor.board:getTile(cursor.coord)
 		if hoveredBot ~= nil then
-			love.graphics.draw(hoveredBot.image, 0, 0)
-			local bonusStrength = hoveredBot:getTotalStrength() - hoveredBot.number
-			if bonusStrength ~= 0 then
-				love.graphics.draw(strengthBonus[bonusStrength], 20, 50)
-			end
-			if hoveredBot.EMP == true then
-				love.graphics.draw(empIndicator, 23, 157)
-			end
+			drawBigCard(hoveredBot)
 		end
 	end
 
@@ -172,6 +165,29 @@ function drawCursor(cursor)
 						   boardTilePositions[cursor.coord[1]][cursor.coord[2]][2]+math.floor(floatingCardOffset[2])+5}
 		love.graphics.draw(shadow, cardCoord[1]-5, cardCoord[2]-5)
 		drawMiniCard(cursor.selectedCard, cardCoord)
+	end
+end
+
+function drawBigCard(bot)
+	love.graphics.draw(bigCard, 0, 0)
+	love.graphics.draw(bot.image, 23, 39)
+	love.graphics.draw(numberDot, 20, 20)
+	local r, g, b = love.graphics.getColor()
+	love.graphics.setColor(0, 0, 0, 1)
+	local numberText = love.graphics.newText(font, bot.number)
+	love.graphics.draw(numberText, 34-numberText:getWidth()/2, 23)
+	love.graphics.setColor(r, g, b)
+	nameFont = love.graphics.newFont(12, "mono")
+	love.graphics.setFont(nameFont)
+	love.graphics.print(bot.name, 51, 22)
+	love.graphics.printf(bot.text, 28, 158, 108)
+	love.graphics.setFont(font)
+	local bonusStrength = bot:getTotalStrength() - bot.number
+	if bonusStrength ~= 0 then
+		love.graphics.draw(strengthBonus[bonusStrength], 20, 50)
+	end
+	if bot.EMP == true then
+		love.graphics.draw(empIndicator, 23, 157)
 	end
 end
 

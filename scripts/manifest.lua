@@ -80,3 +80,5 @@ speedNumbers = {
 }
 numberCursor = love.graphics.newImage("assets/numbercursor.png")
 attackMarker = love.graphics.newImage("assets/attack.png")
+bigCard = love.graphics.newImage("assets/big_card.png")
+numberDot = love.graphics.newImage("assets/number_dot.png")

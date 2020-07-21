@@ -74,7 +74,7 @@ function DeckBuilder:draw()
   local firstIndex = math.min(math.max(1, self.index - windowSize/2), #self.botList - windowSize + 1)
   local lastIndex = math.min(#self.botList, firstIndex + windowSize - 1)
 
-  love.graphics.draw(self.botList[self.index].image, 0, 0)
+  drawBigCard(self.botList[self.index])
 
   for i=firstIndex,lastIndex do
     local drawable = love.graphics.newText(font, self.botList[i].number.." "..self.botList[i].name)

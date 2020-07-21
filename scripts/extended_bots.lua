@@ -1,5 +1,6 @@
 StraitJacket = Bot:new()
 StraitJacket.name = "StraitJacket"
+StraitJacket.text = "The biggest adjacent enemy doesn't attack."
 StraitJacket.image = love.graphics.newImage("assets/renegade.png")
 StraitJacket.mini = love.graphics.newImage("assets/renegade_mini.png")
 StraitJacket.number = 1
@@ -19,13 +20,14 @@ function StraitJacket:tick_(board)
 		end
 	end
 	for i=1,#biggestBots do
-		neighbors[i].paralysis = true
+		neighbors[biggestBots[i]].paralyzed = true
 	end
 	log(self.name.."'s ability applies paralysis to "..#biggestBots.." neighbors.")
 end
 
 LilOleMe = Bot:new()
 LilOleMe.name = "Lil Ole Me"
+LilOleMe.text = "Attacks all enemy bots."
 LilOleMe.image = love.graphics.newImage("assets/renegade.png")
 LilOleMe.mini = love.graphics.newImage("assets/renegade_mini.png")
 LilOleMe.number = 1
@@ -46,6 +48,7 @@ end
 
 Speedbot = Bot:new()
 Speedbot.name = "Speedbot"
+Speedbot.text = "Gets +3 strength while attacking."
 Speedbot.image = love.graphics.newImage("assets/renegade.png")
 Speedbot.mini = love.graphics.newImage("assets/renegade_mini.png")
 Speedbot.number = 2
@@ -55,6 +58,7 @@ end
 
 BlackJack = Bot:new()
 BlackJack.name = "BlackJack"
+BlackJack.text = "Add adjacent bots' strength to this. If >10, dies."
 BlackJack.image = love.graphics.newImage("assets/renegade.png")
 BlackJack.mini = love.graphics.newImage("assets/renegade_mini.png")
 BlackJack.number = 2
@@ -72,6 +76,7 @@ end
 
 FearBot = Bot:new()
 FearBot.name = "FearBot"
+FearBot.text = "If this is smaller than all of its neighbors it gets +4 strength."
 FearBot.image = love.graphics.newImage("assets/renegade.png")
 FearBot.mini = love.graphics.newImage("assets/renegade_mini.png")
 FearBot.number = 2
@@ -90,6 +95,7 @@ end
 
 RadiationBot = Bot:new()
 RadiationBot.name = "RadiationBot"
+RadiationBot.text = "Adjacent bots have -2 strength."
 RadiationBot.image = love.graphics.newImage("assets/booster.png")
 RadiationBot.mini = love.graphics.newImage("assets/booster_mini.png")
 RadiationBot.number = 3
@@ -107,6 +113,7 @@ end
 
 DavidDestroyer = Bot:new()
 DavidDestroyer.name = "David Destroyer"
+DavidDestroyer.text = "Only kills neighbors within 2 strength of it."
 DavidDestroyer.image = love.graphics.newImage("assets/spybot.png")
 DavidDestroyer.mini = love.graphics.newImage("assets/spybot_mini.png")
 DavidDestroyer.number = 4
@@ -121,6 +128,7 @@ end
 
 Faraday = Bot:new()
 Faraday.name = "Faraday"
+Faraday.text = "This is immune to all effects."
 Faraday.image = love.graphics.newImage("assets/ratchet.png")
 Faraday.mini = love.graphics.newImage("assets/ratchet_mini.png")
 Faraday.number = 5
@@ -130,6 +138,7 @@ end
 
 Eater = Bot:new()
 Eater.name = "Eater"
+Eater.text = "After this attacks it gets +1 strength for each kill."
 Eater.image = love.graphics.newImage("assets/ratchet.png")
 Eater.mini = love.graphics.newImage("assets/ratchet_mini.png")
 Eater.number = 5
@@ -139,6 +148,7 @@ end
 
 Bouncer = Bot:new()
 Bouncer.name = "Bouncer"
+Bouncer.text = "The biggest adjacent bot becomes strength 7."
 Bouncer.image = love.graphics.newImage("assets/renegade.png")
 Bouncer.mini = love.graphics.newImage("assets/renegade_mini.png")
 Bouncer.number = 5
@@ -164,6 +174,7 @@ end
 
 TurtleBot = Bot:new()
 TurtleBot.name = "TurtleBot"
+TurtleBot.text = "Has +2 strength while being attacked."
 TurtleBot.image = love.graphics.newImage("assets/ratchet.png")
 TurtleBot.mini = love.graphics.newImage("assets/ratchet_mini.png")
 TurtleBot.number = 6
@@ -176,6 +187,7 @@ end
 
 Pacifist = Bot:new()
 Pacifist.name = "Pacifist"
+Pacifist.text = "If there is an adjacent enemy this is worth one more survivor."
 Pacifist.image = love.graphics.newImage("assets/arcenbot.png")
 Pacifist.mini = love.graphics.newImage("assets/arcenbot_mini.png")
 Pacifist.number = 6
@@ -197,6 +209,7 @@ end
 
 AutoLadder = Bot:new()
 AutoLadder.name = "Auto Ladder"
+AutoLadder.text = "The smallest adjacent bot gets +4 strength."
 AutoLadder.image = love.graphics.newImage("assets/renegade.png")
 AutoLadder.mini = love.graphics.newImage("assets/renegade_mini.png")
 AutoLadder.number = 6
@@ -223,6 +236,7 @@ end
 
 Herobot = Bot:new()
 Herobot.name = "Herobot"
+Herobot.text = "As long as your opponent has more living bots, this is unkillable."
 Herobot.image = love.graphics.newImage("assets/recycler.png")
 Herobot.mini = love.graphics.newImage("assets/recycler_mini.png")
 Herobot.number = 7
@@ -266,6 +280,7 @@ end
 
 StraightShooter = Bot:new()
 StraightShooter.name = "Straight Shooter"
+StraightShooter.text = "If 3 bots in line with this form a straight, convert all of them."
 StraightShooter.image = love.graphics.newImage("assets/injector.png")
 StraightShooter.mini = love.graphics.newImage("assets/injector_mini.png")
 StraightShooter.number = 8
@@ -313,6 +328,7 @@ end
 
 Cultist = Bot:new()
 Cultist.name = "Cultist"
+Cultist.text = "Bots that would be killed by it join its team. Is worth 3 fewer survivors"
 Cultist.image = love.graphics.newImage("assets/injector.png")
 Cultist.mini = love.graphics.newImage("assets/injector_mini.png")
 Cultist.number = 8
@@ -329,6 +345,7 @@ end
 
 Elephant = Bot:new()
 Elephant.name = "Elephant"
+Elephant.text = "Unkillable. Dies if smaller or equal enemies are by it after attack"
 Elephant.image = love.graphics.newImage("assets/ratchet.png")
 Elephant.mini = love.graphics.newImage("assets/ratchet_mini.png")
 Elephant.number = 8
@@ -351,6 +368,7 @@ end
 
 Crusher = Bot:new()
 Crusher.name = "Crusher"
+Crusher.text = "Before this attacks, kill the smallest bot anywhere."
 Crusher.image = love.graphics.newImage("assets/renegade.png")
 Crusher.mini = love.graphics.newImage("assets/renegade_mini.png")
 Crusher.number = 8
@@ -370,6 +388,7 @@ end
 
 Guardian = Bot:new()
 Guardian.name = "Guardian"
+Guardian.text = "The smallest adjacent friendly bot gets +1 strength."
 Guardian.image = love.graphics.newImage("assets/renegade.png")
 Guardian.mini = love.graphics.newImage("assets/renegade_mini.png")
 Guardian.number = 9
@@ -396,6 +415,7 @@ end
 
 SteadfastBot = Bot:new()
 SteadfastBot.name = "SteadfastBot"
+SteadfastBot.text = "Gets +1 strength while attacking."
 SteadfastBot.image = love.graphics.newImage("assets/renegade.png")
 SteadfastBot.mini = love.graphics.newImage("assets/renegade_mini.png")
 SteadfastBot.number = 9
@@ -405,6 +425,7 @@ end
 
 GlassCannon = Bot:new()
 GlassCannon.name = "GlassCannon"
+GlassCannon.text = "Gets -2 strength while being attacked."
 GlassCannon.image = love.graphics.newImage("assets/renegade.png")
 GlassCannon.mini = love.graphics.newImage("assets/renegade_mini.png")
 GlassCannon.number = 10
@@ -417,6 +438,7 @@ end
 
 DynaBot = Bot:new()
 DynaBot.name = "DynaBot"
+DynaBot.text = "After it attacks, it dies."
 DynaBot.image = love.graphics.newImage("assets/renegade.png")
 DynaBot.mini = love.graphics.newImage("assets/renegade_mini.png")
 DynaBot.number = 10
@@ -426,6 +448,7 @@ end
 
 BotenAuGratin = Bot:new()
 BotenAuGratin.name = "Bot en Au Gratin"
+BotenAuGratin.text = "Does not attack on its turn."
 BotenAuGratin.image = love.graphics.newImage("assets/renegade.png")
 BotenAuGratin.mini = love.graphics.newImage("assets/renegade_mini.png")
 BotenAuGratin.number = 10
@@ -435,6 +458,7 @@ end
 
 Merc = Bot:new()
 Merc.name = "Merc"
+Merc.text = "If it would die, instead it changes teams."
 Merc.image = love.graphics.newImage("assets/ratchet.png")
 Merc.mini = love.graphics.newImage("assets/ratchet_mini.png")
 Merc.number = 10

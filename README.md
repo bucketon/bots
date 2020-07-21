@@ -9,7 +9,8 @@ Instructions to run the game:
 Version History:
 ----------------
 **0.9.0**
-* Made pause menu less confusing, harder to accidentally leave games
+* Made pause menu less confusing, harder to accidentally leave games.
+* Made the big cards look a bit uglier in the name of progress.
 
 **0.8.0**
 * Added a matchmaking server. Just go to Online->Matchmaking and you will be paired with an opponent! No more futzing with port forwarding necessary.
