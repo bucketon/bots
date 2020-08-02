@@ -59,6 +59,7 @@ EMPBot.text = "Adjacent bots lose their ability text."
 EMPBot.image = love.graphics.newImage("assets/empbot.png")
 EMPBot.mini = love.graphics.newImage("assets/empbot_mini.png")
 EMPBot.number = 5
+EMPBot.priority = -10
 function EMPBot:tick_(board)
 	local neighbors = self:getNeighbors(board, board:getBotPosition(self.number))
 	local realNeighbors = 0
@@ -91,6 +92,7 @@ Booster.text = "Adjacent bots get +1 strength."
 Booster.image = love.graphics.newImage("assets/booster.png")
 Booster.mini = love.graphics.newImage("assets/booster_mini.png")
 Booster.number = 7
+Booster.priority = 0
 function Booster:tick_(board)
 	local neighbors = self:getNeighbors(board, board:getBotPosition(self.number))
 	local realNeighbors = 0

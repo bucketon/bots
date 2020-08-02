@@ -15,6 +15,12 @@ function AI:calculateTurn(hand, board)
 		Bots.Thresher:new(),
 		Bots.Renegade:new()
 	}
+	if saveData.deck ~= nil then
+		for i=1,#saveData.deck do
+			unusedBots[i] = AllBots[saveData.deck[i]]:new()
+		end
+	end
+
 	local myTeam = hand[1].team
 	local theirTeam = myTeam%2+1
 	local neutralBotLocation = {0, 0}

@@ -10,6 +10,7 @@ empMiniIndicator = love.graphics.newImage("assets/emp_mini.png")
 boostMiniIndicator = love.graphics.newImage("assets/boost_mini.png")
 attackIndicator = love.graphics.newImage("assets/attack_indicator.png")
 miniNumbers = {
+	[0] = love.graphics.newImage("assets/minizero.png"),
 	love.graphics.newImage("assets/minione.png"),
 	love.graphics.newImage("assets/minitwo.png"),
 	love.graphics.newImage("assets/minithree.png"),
@@ -25,15 +26,20 @@ miniNumbers = {
 	love.graphics.newImage("assets/minithirteen.png")
 }
 strengthBonus = {
-	love.graphics.newImage("assets/plusone.png"),
-	love.graphics.newImage("assets/plustwo.png"),
-	love.graphics.newImage("assets/plusthree.png"),
-	love.graphics.newImage("assets/plusfour.png"),
-	love.graphics.newImage("assets/plusfive.png"),
-	love.graphics.newImage("assets/plussix.png"),
-	love.graphics.newImage("assets/plusseven.png"),
-	love.graphics.newImage("assets/pluseight.png"),
-	love.graphics.newImage("assets/plusnine.png")
+	[-4] = love.graphics.newImage("assets/minusfour.png"),
+	[-3] = love.graphics.newImage("assets/minusthree.png"),
+	[-2] = love.graphics.newImage("assets/minustwo.png"),
+	[-1] = love.graphics.newImage("assets/minusone.png"),
+	[0] = nil,
+	[1] = love.graphics.newImage("assets/plusone.png"),
+	[2] = love.graphics.newImage("assets/plustwo.png"),
+	[3] = love.graphics.newImage("assets/plusthree.png"),
+	[4] = love.graphics.newImage("assets/plusfour.png"),
+	[5] = love.graphics.newImage("assets/plusfive.png"),
+	[6] = love.graphics.newImage("assets/plussix.png"),
+	[7] = love.graphics.newImage("assets/plusseven.png"),
+	[8] = love.graphics.newImage("assets/pluseight.png"),
+	[9] = love.graphics.newImage("assets/plusnine.png")
 }
 minicard = love.graphics.newImage("assets/minicard.png")
 minicardevil = love.graphics.newImage("assets/minicardevil.png")
@@ -66,6 +72,7 @@ checkmarkSmall = love.graphics.newImage("assets/checkmarkSmall.png")
 puzzleCursor = love.graphics.newImage("assets/puzzlecursor.png")
 busyIndicator = love.graphics.newImage("assets/busy.png")
 boostParticle = love.graphics.newImage("assets/boost_particle.png")
+damperParticle = love.graphics.newImage("assets/damper_particle.png")
 speedNumbers = {
 	love.graphics.newImage("assets/speed1.png"),
 	love.graphics.newImage("assets/speed2.png"),

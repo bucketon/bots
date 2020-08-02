@@ -56,7 +56,7 @@ function Speedbot:preAttack_(board)
 	self.tempMods = self.tempMods + 3
 end
 
-BlackJack = Bot:new()
+BlackJack = Bot:new()--todo: move death trigger to start of attacks.
 BlackJack.name = "BlackJack"
 BlackJack.text = "Add adjacent bots' strength to this. If >10, dies."
 BlackJack.image = love.graphics.newImage("assets/renegade.png")
@@ -112,7 +112,7 @@ function RadiationBot:tick_(board)
 end
 
 DavidDestroyer = Bot:new()
-DavidDestroyer.name = "David Destroyer"
+DavidDestroyer.name = "Davidestroyer"
 DavidDestroyer.text = "Only kills neighbors within 2 strength of it."
 DavidDestroyer.image = love.graphics.newImage("assets/spybot.png")
 DavidDestroyer.mini = love.graphics.newImage("assets/spybot_mini.png")
@@ -120,7 +120,7 @@ DavidDestroyer.number = 4
 function DavidDestroyer:attack_(board, other)
 	if other == nil then return end
 	local delta = self:getTotalStrength(board) - other:getTotalStrength(board)
-	if delta > -2 and delta < 2 and self.team ~= other.team then
+	if delta >= -2 and delta <= 2 and self.team ~= other.team then
 		log(self.name.."'s ability activated, allowing it to kill "..other.name.." because it is within 2 strength.")
 		other:die(board, self)
 	end
@@ -128,12 +128,16 @@ end
 
 Faraday = Bot:new()
 Faraday.name = "Faraday"
-Faraday.text = "This is immune to all effects."
+Faraday.text = "This bot cannot be modified."
 Faraday.image = love.graphics.newImage("assets/ratchet.png")
 Faraday.mini = love.graphics.newImage("assets/ratchet_mini.png")
 Faraday.number = 5
+Faraday.priority = 10
 function Faraday:tick_(board)
-	self.EMP = true
+	self.EMP = false
+	self.paralyzed = false
+	self.tempMods = 0
+	self.permMods = 0
 end
 
 Eater = Bot:new()
@@ -167,14 +171,15 @@ function Bouncer:tick_(board)
 		end
 	end
 	for i=1,#biggestBots do
-		neighbors[i].tempMods = neighbors[i].tempMods + 7 - neighbors[i]:getTotalStrength()
+		neighbors[biggestBots[i]].tempMods = neighbors[biggestBots[i]].tempMods + 7 - 
+		neighbors[biggestBots[i]]:getTotalStrength()
 	end
 	log(self.name.."'s ability applies paralysis to "..#biggestBots.." neighbors.")
 end
 
 TurtleBot = Bot:new()
 TurtleBot.name = "TurtleBot"
-TurtleBot.text = "Has +2 strength while being attacked."
+TurtleBot.text = "Has +2 strength during other bots' turns."
 TurtleBot.image = love.graphics.newImage("assets/ratchet.png")
 TurtleBot.mini = love.graphics.newImage("assets/ratchet_mini.png")
 TurtleBot.number = 6
@@ -217,10 +222,10 @@ function AutoLadder:tick_(board)
 	local neighbors = self:getNeighbors(board, board:getBotPosition(self.number))
 	local realNeighbors = 0
 	local smallestBots = {}
-	local lowestStrength = 0
+	local lowestStrength = 10
 	for i=1,neighbors.n do
 		if neighbors[i] ~= nil and neighbors[i].number <= lowestStrength then
-			if neighbors[i].number == highestStrength then
+			if neighbors[i].number == lowestStrength then
 				push(smallestBots, i)
 			else
 				lowestStrength = neighbors[i].number
@@ -229,7 +234,7 @@ function AutoLadder:tick_(board)
 		end
 	end
 	for i=1,#smallestBots do
-		neighbors[i].tempMods = neighbors[i].tempMods + 4
+		neighbors[smallestBots[i]].tempMods = neighbors[smallestBots[i]].tempMods + 4
 	end
 	log(self.name.."'s ability applies +5 str to "..#smallestBots.." neighbors.")
 end
@@ -262,7 +267,7 @@ function Herobot:die_(board, killer)
 			end
 		end
 	end
-	local invulnerable = false
+	local invulnerable = true
 	for i=1,#biggest do
 		if biggest[i] == self.team then
 			invulnerable = false
@@ -312,7 +317,7 @@ function StraightShooter:tick_(board)
 			local isStraight = true
 			table.sort (line, function (left, right) return left.number < right.number end )
 			for j=1,#line-1 do
-				local delta = line[j+1] - line[j]
+				local delta = line[j+1].number - line[j].number
 				if delta > 1 then
 					isStraight = false
 				end
@@ -352,7 +357,8 @@ Elephant.number = 8
 function Elephant:postAttack_(board)
 	local neighbors = self:getNeighbors(board, board:getBotPosition(self.number))
 	for i=1,neighbors.n do
-		if neighbors[i].team ~= self.team and neighbors[i]:getTotalStrength(board) < self:getTotalStrength(board) then
+		if neighbors[i] ~= nil and neighbors[i].team ~= self.team and 
+			neighbors[i]:getTotalStrength(board) < self:getTotalStrength(board) then
 			self:die(board, self)
 		end
 	end
@@ -396,7 +402,7 @@ function Guardian:tick_(board)
 	local neighbors = self:getNeighbors(board, board:getBotPosition(self.number))
 	local realNeighbors = 0
 	local smallestBots = {}
-	local lowestStrength = 0
+	local lowestStrength = 10
 	for i=1,neighbors.n do
 		if neighbors[i] ~= nil and neighbors[i].team == self.team and neighbors[i].number <= lowestStrength then
 			if neighbors[i].number == highestStrength then
@@ -408,7 +414,7 @@ function Guardian:tick_(board)
 		end
 	end
 	for i=1,#smallestBots do
-		neighbors[i].tempMods = neighbors[i].tempMods + 1
+		neighbors[smallestBots[i]].tempMods = neighbors[smallestBots[i]].tempMods + 1
 	end
 	log(self.name.."'s ability applies +1 str to "..#smallestBots.." neighbors.")
 end
@@ -425,7 +431,7 @@ end
 
 GlassCannon = Bot:new()
 GlassCannon.name = "GlassCannon"
-GlassCannon.text = "Gets -2 strength while being attacked."
+GlassCannon.text = "Gets -2 strength during other bots' turns."
 GlassCannon.image = love.graphics.newImage("assets/renegade.png")
 GlassCannon.mini = love.graphics.newImage("assets/renegade_mini.png")
 GlassCannon.number = 10
@@ -446,16 +452,6 @@ function DynaBot:postAttack_(board)
 	self:die(board, self)
 end
 
-BotenAuGratin = Bot:new()
-BotenAuGratin.name = "Bot en Au Gratin"
-BotenAuGratin.text = "Does not attack on its turn."
-BotenAuGratin.image = love.graphics.newImage("assets/renegade.png")
-BotenAuGratin.mini = love.graphics.newImage("assets/renegade_mini.png")
-BotenAuGratin.number = 10
-function BotenAuGratin:tick_(board)
-	self.paralysis = true
-end
-
 Merc = Bot:new()
 Merc.name = "Merc"
 Merc.text = "If it would die, instead it changes teams."
@@ -464,6 +460,16 @@ Merc.mini = love.graphics.newImage("assets/ratchet_mini.png")
 Merc.number = 10
 function Merc:die_(board, killer)
 	self.team = killer.team
+end
+
+BotenAuGratin = Bot:new()
+BotenAuGratin.name = "BotEnAuGratin"
+BotenAuGratin.text = "Does not attack on its turn."
+BotenAuGratin.image = love.graphics.newImage("assets/renegade.png")
+BotenAuGratin.mini = love.graphics.newImage("assets/renegade_mini.png")
+BotenAuGratin.number = 10
+function BotenAuGratin:tick_(board)
+	self.paralyzed = true
 end
 
 ExtendedBots = {
@@ -500,6 +506,7 @@ ExtendedBots = {
 	GlassCannon,
 	DynaBot,
 	Merc,
+	BotenAuGratin,
 }
 
 return ExtendedBots

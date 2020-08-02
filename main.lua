@@ -81,6 +81,24 @@ function love.update(dt)
 		end
 		boosts = defrag(boosts, boostsSize)
 	end
+
+	local dampersSize = 15
+	if dampers == nil then
+		dampers = {}
+	end
+	if frameCount%2 == 0 then
+		if #dampers < dampersSize then
+			push(dampers, {math.random(64), math.random(64), 15})
+		end
+		for i=1,#dampers do
+			dampers[i][2] = dampers[i][2] + 1
+			dampers[i][3] = dampers[i][3] - 1
+			if dampers[i][3] < 0 then
+				dampers[i] = nil
+			end
+		end
+		dampers = defrag(dampers, dampersSize)
+	end
 	--end test
 
 	currentMode[#currentMode]:update(dt)

@@ -186,13 +186,25 @@ function Gameboard:refresh()
 		end
 	end
 
-	table.sort (botList, function (left, right) return left.number < right.number end )
+	table.sort (botList, function (left, right) 
+		local leftPriority = left.priority
+		if leftPriority == nil then leftPriority = 0 end
+		local rightPriority = right.priority
+		if rightPriority == nil then rightPriority = 0 end
+		if leftPriority == rightPriority then
+			return left.number < right.number 
+		else
+			return leftPriority < rightPriority
+		end
+	end )
 
 	for i=1,#botList do
 		if botList[i].facedown == false then
 			botList[i]:tick(self)
 		end
 	end
+
+	table.sort (botList, function (left, right) return left.number < right.number end )
 
 	if #botList > 0 and self.combatStep > 0 then
 		for i=1,#botList do

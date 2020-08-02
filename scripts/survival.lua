@@ -8,6 +8,7 @@ function Survival:setup()
 	self.player2Hand = {}
 	self.deck = {}
 	self.board = Gameboard:new()
+
 	self.deckPrototype = {
 		Bots.Arcenbot,
 		Bots.Recycler,
@@ -20,6 +21,13 @@ function Survival:setup()
 		Bots.Thresher,
 		Bots.Renegade
 	}
+	if saveData.deck ~= nil then
+		for i=1,#saveData.deck do
+			self.deckPrototype[i] = AllBots[saveData.deck[i]]
+		end
+	end
+
+	
 	self:fillDeck()
 	shuffle(self.deck)
 	self.playerTurnsDone = false

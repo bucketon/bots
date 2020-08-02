@@ -72,7 +72,7 @@ function drawMiniCard(bot, position)
 			if saveData.ShowSpeed == true or bot.number ~= bot:getTotalStrength() then
 				love.graphics.draw(speedNumbers[bot.number], 46, 4)
 			end
-			local totalStrength = bot:getTotalStrength()
+			local totalStrength = math.max(0, bot:getTotalStrength())
 			love.graphics.draw(miniNumbers[totalStrength], 4, 4)
 			if bot.EMP == true then
 				love.graphics.draw(empMiniIndicator, 0, 0)
@@ -82,6 +82,14 @@ function drawMiniCard(bot, position)
 				for i=1,#boosts do
 					if boosts[i][3] > 5 or boosts[i][3] % 2 == 0 then
 						love.graphics.draw(boostParticle, boosts[i][1], boosts[i][2])
+					end
+				end
+			end
+			if bot.number > bot:getTotalStrength() then
+				--love.graphics.draw(boostMiniIndicator, 0, 0)
+				for i=1,#dampers do
+					if dampers[i][3] > 5 or dampers[i][3] % 2 == 0 then
+						love.graphics.draw(damperParticle, dampers[i][1], dampers[i][2])
 					end
 				end
 			end

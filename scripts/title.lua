@@ -19,8 +19,8 @@ function TitleMode:setup()
 			mode = require('scripts/classic_online')},
 
 			{label = "Help", 
-				--{label = "Autoplay", 
-				--mode = require('scripts/autoplay')},
+				{label = "Autoplay", 
+				mode = require('scripts/autoplay')},
 				{label = "How to Play", 
 			 	mode = require('scripts/rules')},
 				{label = "Sandbox", 

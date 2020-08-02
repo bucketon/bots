@@ -53,16 +53,22 @@ function VsAIMode:deal()
 end
 
 function VsAIMode:fillDeck() --the classic bots set
-	self.deck[1] = Bots.Arcenbot:new()
-	self.deck[2] = Bots.Recycler:new()
-	self.deck[3] = Bots.Injector:new()
-	self.deck[4] = Bots.Ratchet:new()
-	self.deck[5] = Bots.EMPBot:new()
-	self.deck[6] = Bots.SpyBot:new()
-	self.deck[7] = Bots.Booster:new()
-	self.deck[8] = Bots.LaserCannon:new()
-	self.deck[9] = Bots.Thresher:new()
-	self.deck[10] = Bots.Renegade:new()
+	if saveData.deck == nil then
+		self.deck[1] = Bots.Arcenbot:new()
+		self.deck[2] = Bots.Recycler:new()
+		self.deck[3] = Bots.Injector:new()
+		self.deck[4] = Bots.Ratchet:new()
+		self.deck[5] = Bots.EMPBot:new()
+		self.deck[6] = Bots.SpyBot:new()
+		self.deck[7] = Bots.Booster:new()
+		self.deck[8] = Bots.LaserCannon:new()
+		self.deck[9] = Bots.Thresher:new()
+		self.deck[10] = Bots.Renegade:new()
+	else
+		for i=1,#saveData.deck do
+			self.deck[i] = AllBots[saveData.deck[i]]:new()
+		end
+	end
 end
 
 function VsAIMode:keypressed(key)
