@@ -90,9 +90,9 @@ function DeckBuilder:keypressed(key)
     if self.menuIndex ~= 0 then
       self.menu[self.menuIndex].method(self)
     else
-      if first(deck, self.index) == nil then
+      if first(deck, self.botList[self.index].id) == nil then
         for i=1,#deck do
-          if AllBots[deck[i]].bot.number == self.botList[self.index].bot.number then
+          if AllBots[deck[i]].number == self.botList[self.index].bot.number then
             deck[i] = self.botList[self.index].id
             self:setCurrentDeck(deck)
           end

@@ -11,6 +11,7 @@ Version History:
 **0.9.0**
 * Made pause menu less confusing, harder to accidentally leave games.
 * Made the big cards look a bit uglier in the name of progress.
+* Added 24 new bots! Go to help->deckbuilder to play with them. Custom decks apply to all modes other than online (coming soon).
 
 **0.8.0**
 * Added a matchmaking server. Just go to Online->Matchmaking and you will be paired with an opponent! No more futzing with port forwarding necessary.
