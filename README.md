@@ -8,6 +8,8 @@ Instructions to run the game:
 
 Version History:
 ----------------
+**0.10.0**
+
 **0.9.0**
 * Made pause menu less confusing, harder to accidentally leave games.
 * Made the big cards look a bit uglier in the name of progress.

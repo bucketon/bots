@@ -26,9 +26,14 @@ function ClassicOnlineMode:start(host, peer)
 
 	if peer ~= nil then
 		self.peer = peer
+		if saveData.deck == nil then
+			saveData.deck = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+			save(saveData)
+		end
+		self.deckPrototype = deepCopy(saveData.deck)
+		shuffle(self.deckPrototype)
 		self:fillDeck()
-		shuffle(self.deck)
-		peer:send(self:serializeStart(self.deck, second))
+		peer:send(self:serializeStart(self.deckPrototype, second))
 		self:deal(1)
 		if second then
 			self.enemyTurn = true
@@ -103,7 +108,10 @@ function ClassicOnlineMode:deal(mod)
 end
 
 function ClassicOnlineMode:fillDeck() --the classic bots set
-	self.deck[1] = Bots.Arcenbot:new()
+	for i=1,#self.deckPrototype do
+		self.deck[i] = AllBots[self.deckPrototype[i]]:new()
+	end
+	--[[self.deck[1] = Bots.Arcenbot:new()
 	self.deck[2] = Bots.Recycler:new()
 	self.deck[3] = Bots.Injector:new()
 	self.deck[4] = Bots.Ratchet:new()
@@ -112,7 +120,7 @@ function ClassicOnlineMode:fillDeck() --the classic bots set
 	self.deck[7] = Bots.Booster:new()
 	self.deck[8] = Bots.LaserCannon:new()
 	self.deck[9] = Bots.Thresher:new()
-	self.deck[10] = Bots.Renegade:new()
+	self.deck[10] = Bots.Renegade:new()]]--
 end
 
 function ClassicOnlineMode:keypressed(key)
@@ -291,7 +299,7 @@ end
 function ClassicOnlineMode:serializeStart(deck, first)
 	local ret = ""
 	for i=1,#deck do
-		ret = ret..deck[i].number..","
+		ret = ret..deck[i]..","
 	end
 	local firstString = "0"
 	if first == true then firstString = "1" end
@@ -313,6 +321,7 @@ function string:split(pattern)
 end
 
 function ClassicOnlineMode:deserializeStart(deck)
+	log("deck is "..deck)
 	local list = deck:split(",")
 	local first = pop(list) == "1"
 	local retDeck = self:toBots(list)
@@ -329,7 +338,8 @@ end
 
 function ClassicOnlineMode:toBot(number)
 	log("toBot called with "..number..".")
-	if number == "1" or number == 1 then
+	return AllBots[tonumber(number)]:new()
+	--[[if number == "1" or number == 1 then
 		return Bots.Arcenbot:new()
 	elseif number == "2" or number == 2 then
 		return Bots.Recycler:new()
@@ -351,7 +361,7 @@ function ClassicOnlineMode:toBot(number)
 		return Bots.Renegade:new()
 	else
 		return nil
-	end
+	end]]--
 end
 
 function ClassicOnlineMode:serializeMove(number, space)
